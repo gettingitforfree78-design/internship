@@ -23,10 +23,11 @@ exports.register = async (req, res) => {
     });
     const token = generateToken(user._id, user.role);
 
+    const isProduction = process.env.NODE_ENV === 'production' || !!process.env.FRONTEND_URL;
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     };
 
@@ -71,10 +72,11 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user._id, user.role);
 
+    const isProduction = process.env.NODE_ENV === 'production' || !!process.env.FRONTEND_URL;
     const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     };
 

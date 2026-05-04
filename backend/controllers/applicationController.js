@@ -227,9 +227,18 @@ exports.downloadOfferLetter = async (req, res) => {
       res.setHeader('Content-Type', contentType);
       res.setHeader('Content-Disposition', `attachment; filename="Offer_Letter_${safeName}${ext}"`);
       
-      // Ensure it's a native Node Buffer so Express sends it as binary, not JSON
-      const bufferToSend = Buffer.isBuffer(ol.pdfBuffer) ? ol.pdfBuffer : Buffer.from(ol.pdfBuffer);
-      return res.send(bufferToSend);
+      // Extract native Buffer from MongoDB Binary
+      let rawBuffer;
+      if (Buffer.isBuffer(ol.pdfBuffer)) {
+        rawBuffer = ol.pdfBuffer;
+      } else if (ol.pdfBuffer.buffer) {
+        rawBuffer = Buffer.from(ol.pdfBuffer.buffer);
+      } else {
+        // Fallback for weird serialization
+        rawBuffer = Buffer.from(ol.pdfBuffer);
+      }
+      
+      return res.end(rawBuffer);
     } else if (ol.pdfPath && fs.existsSync(ol.pdfPath)) {
       const ext = require('path').extname(ol.pdfPath) || '.pdf';
       return res.download(ol.pdfPath, `Offer_Letter_${safeName}${ext}`);

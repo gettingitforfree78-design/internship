@@ -3,13 +3,15 @@ const cors = require('cors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-const envResult = require('dotenv').config({ path: path.join(__dirname, '../secured_not_to_be_pushed/secrets/backend.env') });
+const fs = require('fs');
+const envPath = path.join(__dirname, '../secured_not_to_be_pushed/secrets/backend.env');
 
-console.log('📂 Loading .env from:', path.join(__dirname, '../secured_not_to_be_pushed/secrets/backend.env'));
-if (envResult.error) {
-  console.error('❌ Failed to load .env file:', envResult.error.message);
+if (fs.existsSync(envPath)) {
+  require('dotenv').config({ path: envPath });
+  console.log('📂 Loading .env from local secured path');
 } else {
-  console.log('✅ .env file loaded successfully');
+  require('dotenv').config();
+  console.log('🌐 Using system environment variables (Production)');
 }
 console.log('📧 Email User:', process.env.EMAIL_USER ? 'Configured ✅' : 'NOT FOUND ❌');
 

@@ -52,7 +52,8 @@ export default function Dashboard() {
   ];
 
   const paidInternships = payments.filter(p => p.status === 'paid');
-  const paidApplications = applications.filter(a => a.paymentStatus === 'paid');
+  const activeApplications = applications.filter(a => ['paid', 'pending_verification'].includes(a.paymentStatus));
+  const fullyPaidApplications = applications.filter(a => a.paymentStatus === 'paid');
 
   const handleShare = async (appId) => {
     const email = shareEmail[appId];
@@ -136,9 +137,11 @@ export default function Dashboard() {
                 </h3>
 
                 <span className="text-xs md:text-sm text-gray-300 bg-white/5 px-4 py-2 rounded-full">
-                  {paidApplications.length > 0
-                    ? "🎉 Application Completed"
-                    : "🚀 In Progress"}
+                  {fullyPaidApplications.length > 0
+                    ? "🎉 Internship Active"
+                    : activeApplications.length > 0 
+                      ? "⏳ Verification Pending"
+                      : "🚀 In Progress"}
                 </span>
               </div>
 
@@ -148,24 +151,24 @@ export default function Dashboard() {
                   {
                     label: "Apply",
                     sub: "Details submitted",
-                    done: true,
+                    done: applications.length > 0,
                     icon: FaCheck,
                   },
                   {
                     label: "Payment",
-                    sub: "₹199 fee paid",
-                    done: paidApplications.length > 0,
+                    sub: "₹199 fee submitted",
+                    done: activeApplications.length > 0,
                     icon:
-                      paidApplications.length > 0
+                      activeApplications.length > 0
                         ? FaCheck
                         : FaCreditCard,
                   },
                   {
                     label: "Offer Letter",
                     sub: "Ready to download",
-                    done: paidApplications.length > 0,
+                    done: fullyPaidApplications.length > 0,
                     icon:
-                      paidApplications.length > 0
+                      fullyPaidApplications.length > 0
                         ? FaCheck
                         : FaFileAlt,
                   },
@@ -199,7 +202,7 @@ export default function Dashboard() {
               <div className="glass rounded-2xl p-6 text-center">
                 <FaGraduationCap className="text-accent-500 text-3xl mx-auto mb-3" />
                 <p className="text-3xl font-bold text-white">
-                  {paidApplications.length}
+                  {activeApplications.length}
                 </p>
                 <p className="text-gray-400 text-sm">
                   Internships Enrolled
@@ -209,7 +212,7 @@ export default function Dashboard() {
               <div className="glass rounded-2xl p-6 text-center">
                 <FaCreditCard className="text-green-400 text-3xl mx-auto mb-3" />
                 <p className="text-3xl font-bold text-white">
-                  ₹{paidApplications.length * 199}
+                  ₹{activeApplications.length * 199}
                 </p>
                 <p className="text-gray-400 text-sm">
                   Total Invested

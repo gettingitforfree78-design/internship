@@ -390,10 +390,6 @@ exports.confirmUpiPayment = async (req, res) => {
     if (!upiTransactionId || !utrRegex.test(upiTransactionId.trim())) {
       return res.status(400).json({ success: false, message: 'Please enter a valid 12-digit UPI Transaction ID (UTR)' });
     }
-    
-    if (!upiId || !upiId.trim()) {
-      return res.status(400).json({ success: false, message: 'Please enter your UPI ID' });
-    }
 
     const application = await Application.findOne({ _id: applicationId, userId: req.user._id });
     if (!application) return res.status(404).json({ success: false, message: 'Application not found' });
@@ -415,7 +411,7 @@ exports.confirmUpiPayment = async (req, res) => {
     application.paymentStatus = 'pending_verification';
     application.paymentMethod = 'upi_qr';
     application.upiTransactionId = upiTransactionId.trim();
-    application.upiId = upiId.trim();
+    application.upiId = upiId ? upiId.trim() : '';
     application.amount = 199; // or whatever the current amount is
 
     await application.save();

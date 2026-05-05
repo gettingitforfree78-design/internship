@@ -51,10 +51,6 @@ export default function PaymentPage() {
       setTxnError('Transaction ID must be exactly 12 digits (UTR number).');
       return;
     }
-    if (!upiId.trim()) {
-      setTxnError('Please enter your UPI ID');
-      return;
-    }
     setTxnError('');
 
     setConfirming(true);
@@ -328,7 +324,7 @@ export default function PaymentPage() {
               {/* UPI ID Input */}
               <div style={{ marginBottom: '1rem', textAlign: 'left' }}>
                 <label style={{ color: '#cbd5e1', fontSize: '0.8125rem', fontWeight: 600, display: 'block', marginBottom: '0.5rem' }}>
-                  👤 Your UPI ID
+                  👤 Your UPI ID (Optional)
                 </label>
                 <input
                   type="text"
@@ -343,15 +339,15 @@ export default function PaymentPage() {
                     fontFamily: 'monospace',
                     letterSpacing: '0.5px',
                     background: 'rgba(255,255,255,0.06)',
-                    border: txnError && !upiId.trim() ? '2px solid #ef4444' : '2px solid rgba(255,255,255,0.1)',
+                    border: '2px solid rgba(255,255,255,0.1)',
                     borderRadius: '0.75rem',
                     color: '#fff',
                     outline: 'none',
                     transition: 'border-color 0.2s',
                     boxSizing: 'border-box',
                   }}
-                  onFocus={(e) => { if (!(txnError && !upiId.trim())) e.target.style.borderColor = '#FF6B35'; }}
-                  onBlur={(e) => { if (!(txnError && !upiId.trim())) e.target.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+                  onFocus={(e) => { e.target.style.borderColor = '#FF6B35'; }}
+                  onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; }}
                 />
               </div>
 

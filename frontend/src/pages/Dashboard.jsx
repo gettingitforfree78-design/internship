@@ -52,7 +52,7 @@ export default function Dashboard() {
   ];
 
   const paidInternships = payments.filter(p => p.status === 'paid');
-  const activeApplications = applications.filter(a => ['paid', 'pending_verification'].includes(a.paymentStatus));
+  const activeApplications = applications.filter(a => ['paid', 'pending_verification'].includes(a.paymentStatus) || a.upiTransactionId);
   const fullyPaidApplications = applications.filter(a => a.paymentStatus === 'paid');
 
   const handleShare = async (appId) => {
@@ -212,7 +212,7 @@ export default function Dashboard() {
               <div className="glass rounded-2xl p-6 text-center">
                 <FaCreditCard className="text-green-400 text-3xl mx-auto mb-3" />
                 <p className="text-3xl font-bold text-white">
-                  ₹{activeApplications.length * 199}
+                  ₹{activeApplications.reduce((acc, a) => acc + (a.amount || 199), 0)}
                 </p>
                 <p className="text-gray-400 text-sm">
                   Total Invested

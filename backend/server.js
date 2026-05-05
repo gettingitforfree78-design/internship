@@ -27,6 +27,7 @@ const certificateRoutes = require('./routes/certificateRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
 
 
 const app = express();
@@ -67,6 +68,7 @@ app.use('/api/certificate', certificateRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 
 // Health check

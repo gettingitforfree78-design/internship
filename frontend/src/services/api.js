@@ -67,4 +67,7 @@ export const shareOfferLetter = (id, data) => API.post(`/applications/share/${id
 export const getMyApplications = () => API.get('/applications/my');
 export const getAllApplications = () => API.get('/applications/all');
 
+// Feedback
+export const submitFeedback = (data) => API.post('/feedback', data);
+
 export default API;

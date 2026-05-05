@@ -1,16 +1,47 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FaCheckCircle, FaEnvelope, FaFileAlt, FaHome, FaTachometerAlt } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaCheckCircle, FaEnvelope, FaFileAlt, FaHome, FaTachometerAlt, FaCommentAlt, FaPaperPlane, FaSpinner } from 'react-icons/fa';
+import { submitFeedback } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 export default function SuccessPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const isPending = state?.application?.status === 'pending_verification';
+
+  const [feedback, setFeedback] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (!state?.offerLetterId && !isPending) navigate('/');
   }, [state, navigate, isPending]);
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    if (!feedback.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await submitFeedback({
+        feedback,
+        name: user?.name,
+        email: user?.email,
+        phone: user?.phone,
+        type: isPending ? 'Post-Payment-Pending' : 'Success-Feedback'
+      });
+      toast.success('Feedback sent! Thank you.');
+      setSubmitted(true);
+      setFeedback('');
+    } catch (err) {
+      toast.error('Failed to send feedback');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-primary-900)', padding: '5rem 1.5rem 3rem' }}>
@@ -85,13 +116,94 @@ export default function SuccessPage() {
           </div>
 
           {/* Buttons */}
-          <div style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
             <Link to="/dashboard" className="btn-primary" style={{ flex: 1, justifyContent: 'center', minWidth: '10rem' }}>
               <FaTachometerAlt /> Go to Dashboard
             </Link>
             <Link to="/" className="btn-secondary" style={{ flex: 1, justifyContent: 'center', minWidth: '10rem' }}>
               <FaHome /> Home
             </Link>
+          </div>
+
+          {/* Feedback Section */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.75rem', background: 'rgba(255,107,53,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <FaCommentAlt style={{ color: '#FF6B35', fontSize: '1rem' }} />
+              </div>
+              <div>
+                <h3 style={{ color: '#fff', fontSize: '1rem', fontWeight: 700, margin: 0 }}>Share Your Feedback</h3>
+                <p style={{ color: '#64748b', fontSize: '0.75rem', margin: '2px 0 0' }}>Help us improve your experience</p>
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {!submitted ? (
+                <motion.form 
+                  key="form"
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  exit={{ opacity: 0 }}
+                  onSubmit={handleFeedbackSubmit}
+                >
+                  <textarea 
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Tell us about your experience or if you faced any issues..."
+                    disabled={isSubmitting}
+                    style={{
+                      width: '100%',
+                      minHeight: '100px',
+                      padding: '1rem',
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '0.75rem',
+                      color: '#fff',
+                      fontSize: '0.875rem',
+                      outline: 'none',
+                      resize: 'none',
+                      marginBottom: '1rem',
+                      transition: 'border-color 0.2s',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(255,107,53,0.3)'}
+                    onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                  />
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting || !feedback.trim()}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      background: feedback.trim() ? '#FF6B35' : 'rgba(255,107,53,0.2)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '0.75rem',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      cursor: feedback.trim() ? 'pointer' : 'not-allowed',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {isSubmitting ? <FaSpinner className="animate-spin" /> : <><FaPaperPlane /> Submit Feedback</>}
+                  </button>
+                </motion.form>
+              ) : (
+                <motion.div 
+                  key="thanks"
+                  initial={{ opacity: 0, scale: 0.95 }} 
+                  animate={{ opacity: 1, scale: 1 }} 
+                  style={{ background: 'rgba(74,222,128,0.05)', border: '1px solid rgba(74,222,128,0.1)', borderRadius: '0.75rem', padding: '1.25rem', textAlign: 'center' }}
+                >
+                  <p style={{ color: '#4ade80', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>🎉 Thank you for your valuable feedback!</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '0.5rem' }}>Our HR team will review it shortly.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 

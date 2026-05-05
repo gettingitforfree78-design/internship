@@ -296,49 +296,64 @@ export default function Dashboard() {
         {/* Offer Letters */}
         {tab === 'offers' && (
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="space-y-6">
-            {paidApplications.length === 0 ? (
+            {(paidApplications.length === 0 && applications.filter(a => a.paymentStatus === 'pending_verification').length === 0) ? (
               <div className="glass rounded-2xl p-8 md:p-12 text-center"><p className="text-gray-400 text-sm md:text-base">No offer letters available yet.</p></div>
-            ) : paidApplications.map((app) => (
+            ) : [...paidApplications, ...applications.filter(a => a.paymentStatus === 'pending_verification')].map((app) => (
               <div key={app._id} className="glass rounded-2xl p-6 md:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
                 <div>
                   <h3 className="text-white text-lg font-semibold">{app.internshipRole}</h3>
                   <p className="text-gray-400 text-sm mt-1 mb-3">Company: Launchpad Intensive (Shodwe, Inc.)</p>
-                  <a 
-                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/applications/download/${app._id}?token=${localStorage.getItem('launchpad_token')}`}
-                    className="inline-flex items-center gap-2 text-accent-400 text-sm font-mono bg-accent-500/10 px-3 py-1.5 rounded-lg hover:bg-accent-500/20 transition-colors"
-                    download={`OfferLetter_${app.offerLetterId}.pdf`}
-                  >
-                    {app.offerLetterId} <FaDownload className="text-xs" />
-                  </a>
+                  
+                  {app.paymentStatus === 'paid' ? (
+                    <a 
+                      href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/applications/download/${app._id}?token=${localStorage.getItem('launchpad_token')}`}
+                      className="inline-flex items-center gap-2 text-accent-400 text-sm font-mono bg-accent-500/10 px-3 py-1.5 rounded-lg hover:bg-accent-500/20 transition-colors"
+                      download={`OfferLetter_${app.offerLetterId}.pdf`}
+                    >
+                      {app.offerLetterId} <FaDownload className="text-xs" />
+                    </a>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 text-yellow-400 text-sm font-mono bg-yellow-500/10 px-3 py-1.5 rounded-lg">
+                      ⏳ Pending Verification (12-24 hrs)
+                    </span>
+                  )}
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                  <a 
-                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/applications/download/${app._id}?token=${localStorage.getItem('launchpad_token')}`} 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    download={`OfferLetter_${app.offerLetterId}.pdf`}
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-accent-500 text-white rounded-xl text-sm font-semibold hover:bg-accent-600 transition-colors shadow-lg shadow-accent-500/20"
-                  >
-                    <FaDownload /> Download PDF
-                  </a>
-                  
-                  <div className="flex gap-2 flex-1 sm:flex-none">
-                    <input 
-                      type="email" 
-                      placeholder="Share via email..." 
-                      value={shareEmail[app._id] || ''} 
-                      onChange={(e) => setShareEmail({...shareEmail, [app._id]: e.target.value})}
-                      className="w-full sm:w-64 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-accent-500 transition-colors"
-                    />
-                    <button 
-                      onClick={() => handleShare(app._id)}
-                      disabled={sharing || !shareEmail[app._id]}
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 text-white rounded-xl text-sm font-semibold hover:bg-white/20 transition-colors disabled:opacity-50 shrink-0"
-                    >
-                      {sharing ? <FaSpinner className="animate-spin" /> : <FaShare />}
-                    </button>
-                  </div>
+                  {app.paymentStatus === 'paid' ? (
+                    <>
+                      <a 
+                        href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/applications/download/${app._id}?token=${localStorage.getItem('launchpad_token')}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        download={`OfferLetter_${app.offerLetterId}.pdf`}
+                        className="flex items-center justify-center gap-2 px-5 py-2.5 bg-accent-500 text-white rounded-xl text-sm font-semibold hover:bg-accent-600 transition-colors shadow-lg shadow-accent-500/20"
+                      >
+                        <FaDownload /> Download PDF
+                      </a>
+                      
+                      <div className="flex gap-2 flex-1 sm:flex-none">
+                        <input 
+                          type="email" 
+                          placeholder="Share via email..." 
+                          value={shareEmail[app._id] || ''} 
+                          onChange={(e) => setShareEmail({...shareEmail, [app._id]: e.target.value})}
+                          className="w-full sm:w-64 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-accent-500 transition-colors"
+                        />
+                        <button 
+                          onClick={() => handleShare(app._id)}
+                          disabled={sharing || !shareEmail[app._id]}
+                          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white/10 text-white rounded-xl text-sm font-semibold hover:bg-white/20 transition-colors disabled:opacity-50 shrink-0"
+                        >
+                          {sharing ? <FaSpinner className="animate-spin" /> : <FaShare />}
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-center gap-2 px-5 py-2.5 bg-yellow-500/10 text-yellow-500 rounded-xl text-sm font-semibold border border-yellow-500/20">
+                      Your offer letter will be generated once verified.
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

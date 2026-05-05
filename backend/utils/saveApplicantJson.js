@@ -34,7 +34,58 @@ exports.saveToJsonFile = (phone, data) => {
     };
     fs.writeFileSync(currUserPath, JSON.stringify(currUserData, null, 2));
 
+    // ─── CSV (Excel) Export ────────────────────────────────────────────────
+    const csvFilePath = path.join(dataDir, 'applicants.csv');
+    const headers = ['FullName', 'Email', 'Phone', 'College', 'Course', 'Role', 'StartDate', 'EndDate', 'Mode', 'Stipend', 'Address', 'Timestamp'];
+    
+    let csvRow = [
+      data.fullName || '',
+      data.email || '',
+      phone || '',
+      data.college || '',
+      data.course || '',
+      data.internshipRole || '',
+      data.startDate || '',
+      data.endDate || '',
+      data.mode || '',
+      data.stipend || '',
+      data.address || '',
+      new Date().toISOString()
+    ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+
+    if (!fs.existsSync(csvFilePath)) {
+      fs.writeFileSync(csvFilePath, headers.join(',') + '\n' + csvRow + '\n');
+    } else {
+      fs.appendFileSync(csvFilePath, csvRow + '\n');
+    }
+
   } catch (err) {
-    console.error('Error saving to JSON file:', err.message);
+    console.error('Error saving to JSON/CSV files:', err.message);
+  }
+};
+
+exports.savePaymentToCsv = (application) => {
+  try {
+    const csvFilePath = path.join(dataDir, 'payments_verification.csv');
+    const headers = ['FullName', 'Email', 'Phone', 'UPI_ID', 'Transaction_ID', 'Amount', 'Status', 'Timestamp'];
+    
+    let csvRow = [
+      application.fullName || '',
+      application.email || '',
+      application.phone || '',
+      application.upiId || '',
+      application.upiTransactionId || '',
+      application.amount || '',
+      application.paymentStatus || '',
+      new Date().toISOString()
+    ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+
+    if (!fs.existsSync(csvFilePath)) {
+      fs.writeFileSync(csvFilePath, headers.join(',') + '\n' + csvRow + '\n');
+    } else {
+      fs.appendFileSync(csvFilePath, csvRow + '\n');
+    }
+  } catch (err) {
+    console.error('Error saving payment to CSV:', err.message);
   }
 };

@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const Application = require('../models/Application');
 const OfferLetter = require('../models/OfferLetter');
 const ApplicantData = require('../models/ApplicantData');
-const { saveToJsonFile } = require('../utils/saveApplicantJson');
+const { saveToJsonFile, savePaymentToCsv } = require('../utils/saveApplicantJson');
 const { generateOfferLetterPDF } = require('../services/offerLetterService');
 const { sendOfferLetterEmail } = require('../services/offerLetterEmailService');
 
@@ -384,96 +384,76 @@ exports.shareOfferLetter = async (req, res) => {
 // @access Private
 exports.confirmUpiPayment = async (req, res) => {
   try {
-    const { applicationId, upiTransactionId } = req.body;
+    const { applicationId, upiTransactionId, upiId } = req.body;
 
     const utrRegex = /^\d{12}$/;
     if (!upiTransactionId || !utrRegex.test(upiTransactionId.trim())) {
       return res.status(400).json({ success: false, message: 'Please enter a valid 12-digit UPI Transaction ID (UTR)' });
     }
+    
+    if (!upiId || !upiId.trim()) {
+      return res.status(400).json({ success: false, message: 'Please enter your UPI ID' });
+    }
 
     const application = await Application.findOne({ _id: applicationId, userId: req.user._id });
     if (!application) return res.status(404).json({ success: false, message: 'Application not found' });
-    if (application.paymentStatus === 'paid') return res.status(400).json({ success: false, message: 'Already paid' });
+    if (application.paymentStatus === 'paid' || application.paymentStatus === 'pending_verification') {
+      return res.status(400).json({ success: false, message: 'Payment is already processed or under verification' });
+    }
 
     // Check for duplicate transaction ID
-    const duplicate = await Application.findOne({ upiTransactionId: upiTransactionId.trim(), paymentStatus: 'paid' });
+    const duplicate = await Application.findOne({ 
+      upiTransactionId: upiTransactionId.trim(), 
+      paymentStatus: { $in: ['paid', 'pending_verification'] } 
+    });
+    
     if (duplicate) {
       return res.status(400).json({ success: false, message: 'This UPI Transaction ID has already been used' });
     }
 
-    // Mark as paid with UPI details
-    application.paymentStatus = 'paid';
+    // Mark as pending verification with UPI details
+    application.paymentStatus = 'pending_verification';
     application.paymentMethod = 'upi_qr';
     application.upiTransactionId = upiTransactionId.trim();
+    application.upiId = upiId.trim();
     application.amount = 199; // or whatever the current amount is
 
-    // Generate unique offer letter ID
-    const offerLetterId = `LP-OL-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`;
-    application.offerLetterId = offerLetterId;
     await application.save();
 
-    // Generate PDF & send email
-    let pdfPath = null;
-    let emailSent = false;
+    // Update ApplicantData (raw data collection) with payment info
     try {
-      pdfPath = await generateOfferLetterPDF({
-        studentName: application.fullName,
-        email: application.email,
-        college: application.college,
-        course: application.course,
-        internshipRole: application.internshipRole,
-        startDate: application.startDate,
-        endDate: application.endDate,
-        mode: application.mode,
-        stipend: application.stipend,
-        offerLetterId,
-      });
-
-      let pdfBuffer = null;
-      if (pdfPath && fs.existsSync(pdfPath)) {
-        pdfBuffer = fs.readFileSync(pdfPath);
-      }
-
-      await OfferLetter.create({
-        applicationId: application._id,
-        userId: req.user._id,
-        offerLetterId,
-        studentName: application.fullName,
-        email: application.email,
-        phone: application.phone,
-        college: application.college,
-        course: application.course,
-        internshipRole: application.internshipRole,
-        startDate: application.startDate,
-        endDate: application.endDate,
-        mode: application.mode,
-        stipend: application.stipend,
-        pdfPath,
-        pdfBuffer,
-      });
-
-      emailSent = await sendOfferLetterEmail(application, pdfPath);
-      if (emailSent) {
-        application.offerLetterSent = true;
-        await application.save();
-      }
-    } catch (pdfErr) {
-      console.error('PDF/Email error:', pdfErr.message);
+      await ApplicantData.findOneAndUpdate(
+        { phone: application.phone },
+        { 
+          $set: { 
+            paymentInfo: {
+              upiId: application.upiId,
+              upiTransactionId: application.upiTransactionId,
+              amount: application.amount,
+              status: application.paymentStatus,
+              submittedAt: new Date()
+            } 
+          } 
+        }
+      );
+    } catch (err) {
+      console.error('Error updating ApplicantData:', err.message);
     }
+
+    // Log to Excel (CSV)
+    savePaymentToCsv(application);
 
     res.json({
       success: true,
-      message: emailSent
-        ? 'Payment confirmed! Offer Letter sent to your email 🎉'
-        : 'Payment confirmed! Offer Letter generated (email not configured).',
-      offerLetterId,
-      emailSent,
+      message: 'Payment details submitted! Verification takes 12-24 hours. Your offer letter will be sent to your email once verified.',
       application: {
         fullName: application.fullName,
         email: application.email,
         phone: application.phone,
         upiTransactionId: application.upiTransactionId,
+        upiId: application.upiId,
         amount: application.amount,
+        status: application.paymentStatus
       },
     });
   } catch (err) {

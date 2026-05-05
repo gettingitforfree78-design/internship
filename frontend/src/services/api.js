@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// Live backend URL - update this if the Render service URL changes
+const BACKEND_URL = import.meta.env.DEV
+  ? 'http://localhost:5000/api'
+  : 'https://internship-6uer.onrender.com/api';
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://internship-6uer.onrender.com/api',
+  baseURL: BACKEND_URL,
   withCredentials: true,
 });
 

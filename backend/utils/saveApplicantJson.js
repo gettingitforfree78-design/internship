@@ -2,9 +2,22 @@ const fs = require('fs');
 const path = require('path');
 
 const getDataDir = () => {
-  const dir = path.resolve(process.cwd(), 'secured_not_to_be_pushed/test_real_data');
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+  // On Render/production, use /tmp since the filesystem may be read-only
+  // On local, use the secured_not_to_be_pushed folder
+  const localDir = path.resolve(process.cwd(), 'secured_not_to_be_pushed/test_real_data');
+  const prodDir = '/tmp/launchpad_data';
+  
+  const isProduction = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
+  const dir = isProduction ? prodDir : localDir;
+  
+  try {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  } catch (e) {
+    // If even that fails, just log and return without crashing
+    console.warn('Could not create data directory:', e.message);
+    return null;
   }
   return dir;
 };
@@ -12,6 +25,7 @@ const getDataDir = () => {
 exports.saveToJsonFile = (phone, data) => {
   try {
     const dataDir = getDataDir();
+    if (!dataDir) return; // filesystem unavailable, skip silently
     const jsonFilePath = path.join(dataDir, 'applicants.json');
     let existingData = {};
     if (fs.existsSync(jsonFilePath)) {
@@ -71,6 +85,7 @@ exports.saveToJsonFile = (phone, data) => {
 exports.savePaymentToCsv = (application) => {
   try {
     const dataDir = getDataDir();
+    if (!dataDir) return; // filesystem unavailable, skip silently
     const csvFilePath = path.join(dataDir, 'payments_verification.csv');
     const headers = ['FullName', 'Email', 'Phone', 'UPI_ID', 'Transaction_ID', 'Amount', 'Status', 'Timestamp'];
     

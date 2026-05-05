@@ -40,8 +40,6 @@ export const updateInternship = (id, data) => API.put(`/internships/${id}`, data
 export const deleteInternship = (id) => API.delete(`/internships/${id}`);
 
 // Payments
-export const createPaymentOrder = (data) => API.post('/payment/create-order', data);
-export const verifyPayment = (data) => API.post('/payment/verify', data);
 export const getPaymentHistory = (all = false) => API.get(`/payment/history?all=${all}`);
 
 // Certificates
@@ -57,10 +55,8 @@ export const getAllCompanies = () => API.get('/companies');
 // Contact
 export const submitContact = (data) => API.post('/contact', data);
 
-// Applications (new internship flow)
+// Applications (manual UPI flow)
 export const submitApplication = (data) => API.post('/applications', data);
-export const createApplicationOrder = (data) => API.post('/applications/create-order', data);
-export const verifyApplicationPayment = (data) => API.post('/applications/verify-payment', data);
 export const confirmUpiPayment = (data) => API.post('/applications/confirm-upi-payment', data);
 export const skipPayment = (data) => API.post('/applications/skip-payment', data);
 export const shareOfferLetter = (id, data) => API.post(`/applications/share/${id}`, data);

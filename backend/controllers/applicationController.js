@@ -1,5 +1,3 @@
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const Application = require('../models/Application');
@@ -8,11 +6,6 @@ const ApplicantData = require('../models/ApplicantData');
 const { saveToJsonFile, savePaymentToCsv } = require('../utils/saveApplicantJson');
 const { generateOfferLetterPDF } = require('../services/offerLetterService');
 const { sendOfferLetterEmail } = require('../services/offerLetterEmailService');
-
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
 
 // @desc  Submit internship application form
 // @route POST /api/applications
@@ -61,131 +54,8 @@ exports.submitApplication = async (req, res) => {
   }
 };
 
-// @desc  Create Razorpay order for ₹199
-// @route POST /api/applications/create-order
-// @access Private
-exports.createOrder = async (req, res) => {
-  try {
-    const { applicationId } = req.body;
-
-    const application = await Application.findOne({ _id: applicationId, userId: req.user._id });
-    if (!application) return res.status(404).json({ success: false, message: 'Application not found' });
-    if (application.paymentStatus === 'paid') return res.status(400).json({ success: false, message: 'Already paid' });
-
-    const order = await razorpay.orders.create({
-      amount: 19900, // ₹199 in paise
-      currency: 'INR',
-      receipt: `launchpad_app_${applicationId}`,
-      notes: { applicationId: applicationId.toString(), userId: req.user._id.toString() },
-    });
-
-    // Save order ID
-    application.razorpayOrderId = order.id;
-    await application.save();
-
-    res.json({
-      success: true,
-      key: process.env.RAZORPAY_KEY_ID,
-      order,
-      application: { _id: application._id, fullName: application.fullName },
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
-// @desc  Verify payment + generate offer letter + email
-// @route POST /api/applications/verify-payment
-// @access Private
-exports.verifyPayment = async (req, res) => {
-  try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, applicationId } = req.body;
-
-    // Verify signature
-    const expected = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-      .digest('hex');
-
-    if (expected !== razorpay_signature) {
-      return res.status(400).json({ success: false, message: 'Payment verification failed' });
-    }
-
-    const application = await Application.findOne({ _id: applicationId, userId: req.user._id });
-    if (!application) return res.status(404).json({ success: false, message: 'Application not found' });
-
-    // Mark as paid
-    application.paymentStatus = 'paid';
-    application.razorpayPaymentId = razorpay_payment_id;
-
-    // Generate unique offer letter ID
-    const offerLetterId = `LP-OL-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`;
-    application.offerLetterId = offerLetterId;
-    await application.save();
-
-    // Generate PDF
-    let pdfPath = null;
-    let emailSent = false;
-    try {
-      pdfPath = await generateOfferLetterPDF({
-        studentName: application.fullName,
-        email: application.email,
-        college: application.college,
-        course: application.course,
-        internshipRole: application.internshipRole,
-        startDate: application.startDate,
-        endDate: application.endDate,
-        mode: application.mode,
-        stipend: application.stipend,
-        offerLetterId,
-      });
-
-      let pdfBuffer = null;
-      if (pdfPath && fs.existsSync(pdfPath)) {
-        pdfBuffer = fs.readFileSync(pdfPath);
-      }
-
-      // Save OfferLetter record
-      await OfferLetter.create({
-        applicationId: application._id,
-        userId: req.user._id,
-        offerLetterId,
-        studentName: application.fullName,
-        email: application.email,
-        phone: application.phone,
-        college: application.college,
-        course: application.course,
-        internshipRole: application.internshipRole,
-        startDate: application.startDate,
-        endDate: application.endDate,
-        mode: application.mode,
-        stipend: application.stipend,
-        pdfPath,
-        pdfBuffer,
-      });
-
-      // Send email
-      emailSent = await sendOfferLetterEmail(application, pdfPath);
-      if (emailSent) {
-        application.offerLetterSent = true;
-        await application.save();
-      }
-    } catch (pdfErr) {
-      console.error('PDF/Email error:', pdfErr.message);
-    }
-
-    res.json({
-      success: true,
-      message: emailSent
-        ? 'Payment successful! Offer Letter sent to your email 🎉'
-        : 'Payment successful! Offer Letter generated (email not configured).',
-      offerLetterId,
-      emailSent,
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
+// NOTE: Razorpay functions (createOrder/verifyPayment) have been removed.
+// The app now uses confirmUpiPayment for manual verification.
 
 // @desc  Get my applications
 // @route GET /api/applications/my

@@ -296,9 +296,9 @@ export default function Dashboard() {
         {/* Offer Letters */}
         {tab === 'offers' && (
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="space-y-6">
-            {(paidApplications.length === 0 && applications.filter(a => a.paymentStatus === 'pending_verification').length === 0) ? (
+            {applications.length === 0 ? (
               <div className="glass rounded-2xl p-8 md:p-12 text-center"><p className="text-gray-400 text-sm md:text-base">No offer letters available yet.</p></div>
-            ) : [...paidApplications, ...applications.filter(a => a.paymentStatus === 'pending_verification')].map((app) => (
+            ) : applications.map((app) => (
               <div key={app._id} className="glass rounded-2xl p-6 md:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
                 <div>
                   <h3 className="text-white text-lg font-semibold">{app.internshipRole}</h3>
@@ -313,8 +313,16 @@ export default function Dashboard() {
                       {app.offerLetterId} <FaDownload className="text-xs" />
                     </a>
                   ) : (
-                    <span className="inline-flex items-center gap-2 text-yellow-400 text-sm font-mono bg-yellow-500/10 px-3 py-1.5 rounded-lg">
-                      ⏳ Pending Verification (12-24 hrs)
+                    <span className={`inline-flex items-center gap-2 text-sm font-mono px-3 py-1.5 rounded-lg ${
+                      app.paymentStatus === 'pending_verification' ? 'text-yellow-400 bg-yellow-500/10' :
+                      app.paymentStatus === 'rejected' ? 'text-red-400 bg-red-500/10' :
+                      app.paymentStatus === 'failed' ? 'text-red-400 bg-red-500/10' :
+                      'text-gray-400 bg-white/5'
+                    }`}>
+                      {app.paymentStatus === 'pending_verification' && '⏳ Pending Verification (12-24 hrs)'}
+                      {app.paymentStatus === 'rejected' && '❌ Verification Rejected'}
+                      {app.paymentStatus === 'failed' && '❌ Payment Failed'}
+                      {app.paymentStatus === 'pending' && '🕒 Waiting for Payment'}
                     </span>
                   )}
                 </div>
@@ -350,8 +358,16 @@ export default function Dashboard() {
                       </div>
                     </>
                   ) : (
-                    <div className="flex items-center justify-center gap-2 px-5 py-2.5 bg-yellow-500/10 text-yellow-500 rounded-xl text-sm font-semibold border border-yellow-500/20">
-                      Your offer letter will be generated once verified.
+                    <div className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border ${
+                      app.paymentStatus === 'pending_verification' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
+                      app.paymentStatus === 'rejected' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                      app.paymentStatus === 'failed' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                      'bg-white/5 text-gray-500 border-white/10'
+                    }`}>
+                      {app.paymentStatus === 'pending_verification' && 'Offer letter will be generated once verified.'}
+                      {app.paymentStatus === 'rejected' && 'Payment verification failed. Please contact support.'}
+                      {app.paymentStatus === 'failed' && 'Transaction failed. Please try again.'}
+                      {app.paymentStatus === 'pending' && <Link to="/payment" state={{ applicationId: app._id }} className="text-accent-400 hover:underline">Complete Payment</Link>}
                     </div>
                   )}
                 </div>
@@ -367,24 +383,51 @@ export default function Dashboard() {
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">Internship</th>
+                    <th className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">Internship / Role</th>
+                    <th className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">Method</th>
                     <th className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">Amount</th>
                     <th className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">Status</th>
                     <th className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
+                  {/* Razorpay Payments */}
                   {payments.map((p, i) => (
-                    <tr key={i} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-6 py-5 text-white text-sm font-medium">{p.internshipId?.title || 'N/A'}</td>
+                    <tr key={`pay-${i}`} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="px-6 py-5 text-white text-sm font-medium">{p.internshipId?.title || 'Internship Fee'}</td>
+                      <td className="px-6 py-5 text-gray-400 text-sm">Razorpay</td>
                       <td className="px-6 py-5 text-white text-sm">₹{p.amount}</td>
-                      <td className="px-6 py-5"><span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${p.status === 'paid' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}`}>{p.status.toUpperCase()}</span></td>
+                      <td className="px-6 py-5">
+                        <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${p.status === 'paid' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
+                          {p.status.toUpperCase()}
+                        </span>
+                      </td>
                       <td className="px-6 py-5 text-gray-400 text-sm">{new Date(p.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                    </tr>
+                  ))}
+                  {/* UPI Manual Applications */}
+                  {applications.filter(a => a.upiTransactionId).map((a, i) => (
+                    <tr key={`app-${i}`} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="px-6 py-5 text-white text-sm font-medium">{a.internshipRole}</td>
+                      <td className="px-6 py-5 text-gray-400 text-sm">UPI (Manual)</td>
+                      <td className="px-6 py-5 text-white text-sm">₹{a.amount || 199}</td>
+                      <td className="px-6 py-5">
+                        <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
+                          a.paymentStatus === 'paid' ? 'bg-green-500/10 text-green-400' :
+                          a.paymentStatus === 'pending_verification' ? 'bg-yellow-500/10 text-yellow-400' :
+                          'bg-red-500/10 text-red-400'
+                        }`}>
+                          {a.paymentStatus.replace('_', ' ').toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-gray-400 text-sm">{new Date(a.updatedAt || a.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              {payments.length === 0 && <p className="text-center py-16 text-gray-400 text-sm">No payment records found.</p>}
+              {payments.length === 0 && applications.filter(a => a.upiTransactionId).length === 0 && (
+                <p className="text-center py-16 text-gray-400 text-sm">No payment records found.</p>
+              )}
             </div>
           </motion.div>
         )}

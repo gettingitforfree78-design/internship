@@ -13,7 +13,7 @@ const applicationSchema = new mongoose.Schema({
   stipend: { type: String, required: true },
   address: { type: String, default: '' },
   internshipRole: { type: String, default: 'General Internship' },
-  paymentStatus: { type: String, enum: ['pending', 'pending_verification', 'paid'], default: 'pending' },
+  paymentStatus: { type: String, enum: ['pending', 'pending_verification', 'paid', 'failed', 'rejected'], default: 'pending' },
   paymentMethod: { type: String, enum: ['razorpay', 'upi_qr'], default: 'upi_qr' },
   razorpayOrderId: { type: String },
   razorpayPaymentId: { type: String },

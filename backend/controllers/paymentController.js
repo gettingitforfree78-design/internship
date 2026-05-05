@@ -1,5 +1,6 @@
 // NOTE: Razorpay has been removed in favor of manual UPI verification flow.
 // Order creation and verification functions have been disabled.
+const Payment = require('../models/Payment');
 
 // @desc    Get payment history (Historical Razorpay records + Manual UPI)
 // @route   GET /api/payment/history

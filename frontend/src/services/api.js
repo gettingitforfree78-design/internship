@@ -58,7 +58,6 @@ export const submitContact = (data) => API.post('/contact', data);
 // Applications (manual UPI flow)
 export const submitApplication = (data) => API.post('/applications', data);
 export const confirmUpiPayment = (data) => API.post('/applications/confirm-upi-payment', data);
-export const skipPayment = (data) => API.post('/applications/skip-payment', data);
 export const shareOfferLetter = (id, data) => API.post(`/applications/share/${id}`, data);
 export const getMyApplications = () => API.get('/applications/my');
 export const getAllApplications = () => API.get('/applications/all');

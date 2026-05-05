@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { confirmUpiPayment, skipPayment } from '../services/api';
+import { confirmUpiPayment } from '../services/api';
 import toast from 'react-hot-toast';
 import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheckCircle } from 'react-icons/fa';
 
@@ -67,19 +67,6 @@ export default function PaymentPage() {
       setTxnError(err.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
       setConfirming(false);
-    }
-  };
-
-  const handleSkipPayment = async () => {
-    setLoading(true);
-    try {
-      const { data } = await skipPayment({ applicationId: state.applicationId });
-      toast.success(data.message || 'Payment Skipped! 🎉');
-      navigate('/success', { state: { ...data, applicantName: state.applicantName } });
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to skip payment');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -167,11 +154,6 @@ export default function PaymentPage() {
             {/* Pay via UPI QR button */}
             <button onClick={handleShowQR} disabled={loading} className="btn-primary" style={{ width: '100%', fontSize: '1.0625rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <FaQrcode /> Pay ₹{PAYMENT_AMOUNT} via UPI
-            </button>
-
-            {/* Temporary Skip Payment Button */}
-            <button onClick={handleSkipPayment} disabled={loading} style={{ width: '100%', fontSize: '0.9rem', padding: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'transparent', border: '1px solid rgba(255,107,53,0.3)', color: '#FF6B35', borderRadius: '0.75rem', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,107,53,0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-              Skip Payment (Temporary)
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginTop: '1.5rem', color: '#475569', fontSize: '0.8125rem' }}>

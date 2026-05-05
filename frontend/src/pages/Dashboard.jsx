@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { getPaymentHistory, getMyCertificates, updateProfile, getMyApplications, shareOfferLetter } from '../services/api';
+import { getPaymentHistory, getMyCertificates, updateProfile, getMyApplications, getAllApplications, shareOfferLetter, exportTransactions } from '../services/api';
 import toast from 'react-hot-toast';
 import { FaUser, FaGraduationCap, FaCertificate, FaCreditCard, FaDownload, FaEdit, FaSave, FaCheck, FaSpinner, FaFileAlt, FaShare } from 'react-icons/fa';
 
@@ -22,8 +22,11 @@ export default function Dashboard() {
   useEffect(() => {
     const load = async () => {
       try {
+        const isAdmin = user?.role === 'admin';
         const [payRes, certRes, appRes] = await Promise.all([
-          getPaymentHistory(), getMyCertificates(), getMyApplications()
+          getPaymentHistory(isAdmin), 
+          getMyCertificates(), 
+          isAdmin ? getAllApplications() : getMyApplications()
         ]);
         setPayments(payRes.data.payments || []);
         setCertificates(certRes.data.certificates || []);
@@ -32,8 +35,24 @@ export default function Dashboard() {
       if (user) setProfile({ name: user.name, phone: user.phone || '', college: user.college || '' });
       setLoading(false);
     };
-    load();
+    if (user) load();
   }, [user]);
+
+  const handleDownloadCsv = async () => {
+    try {
+      const response = await exportTransactions();
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'transactions.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      toast.success('CSV downloaded successfully');
+    } catch (error) {
+      toast.error('Failed to download CSV');
+    }
+  };
 
   const handleProfileSave = async () => {
     try {
@@ -382,6 +401,16 @@ export default function Dashboard() {
         {/* Payments */}
         {tab === 'payments' && (
           <motion.div initial="hidden" animate="visible" variants={fadeUp} className="glass rounded-2xl overflow-hidden p-4 md:p-8">
+            {user?.role === 'admin' && (
+              <div className="flex justify-end mb-6">
+                <button
+                  onClick={handleDownloadCsv}
+                  className="flex items-center gap-2 px-4 py-2 bg-accent-500 hover:bg-accent-400 text-white rounded-xl transition-all shadow-lg"
+                >
+                  <FaDownload /> Download CSV
+                </button>
+              </div>
+            )}
             <div className="overflow-x-auto rounded-xl border border-white/5">
               <table className="w-full">
                 <thead className="bg-white/5">

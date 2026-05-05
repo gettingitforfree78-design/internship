@@ -327,3 +327,46 @@ exports.confirmUpiPayment = async (req, res) => {
   }
 };
 
+// @desc  Get all applications (Admin)
+// @route GET /api/applications/all
+// @access Private/Admin
+exports.getAllApplications = async (req, res) => {
+  try {
+    const applications = await Application.find()
+      .populate('userId', 'name email')
+      .sort({ createdAt: -1 });
+    res.json({ success: true, applications });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// @desc  Export transactions as CSV (Admin)
+// @route GET /api/applications/export-transactions
+// @access Private/Admin
+exports.exportTransactionsCsv = async (req, res) => {
+  try {
+    const applications = await Application.find({ upiTransactionId: { $exists: true, $ne: '' } }).sort({ createdAt: -1 });
+    
+    let csvStr = 'FullName,Email,Phone,UPI_ID,Transaction_ID,Amount,Status,Date\n';
+    applications.forEach(app => {
+      const row = [
+        app.fullName || '',
+        app.email || '',
+        app.phone || '',
+        app.upiId || '',
+        app.upiTransactionId || '',
+        app.amount || 199,
+        app.paymentStatus || '',
+        new Date(app.createdAt).toISOString()
+      ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+      csvStr += row + '\n';
+    });
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="transactions.csv"');
+    res.send(csvStr);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

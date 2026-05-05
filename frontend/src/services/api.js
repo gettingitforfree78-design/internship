@@ -62,6 +62,7 @@ export const skipPayment = (data) => API.post('/applications/skip-payment', data
 export const shareOfferLetter = (id, data) => API.post(`/applications/share/${id}`, data);
 export const getMyApplications = () => API.get('/applications/my');
 export const getAllApplications = () => API.get('/applications/all');
+export const exportTransactions = () => API.get('/applications/export-transactions', { responseType: 'blob' });
 
 // Feedback
 export const submitFeedback = (data) => API.post('/feedback', data);

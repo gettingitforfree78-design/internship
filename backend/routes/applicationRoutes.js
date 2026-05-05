@@ -2,7 +2,7 @@ const router = require('express').Router();
 const {
   submitApplication,
   getMyApplications, downloadOfferLetter, getAllApplications,
-  confirmUpiPayment, skipPayment, shareOfferLetter
+  confirmUpiPayment, skipPayment, shareOfferLetter, exportTransactionsCsv
 } = require('../controllers/applicationController');
 const protect = require('../middleware/auth');
 const adminOnly = require('../middleware/admin');
@@ -15,6 +15,7 @@ router.post('/share/:id', protect, shareOfferLetter);
 router.get('/my', protect, getMyApplications);
 router.get('/download/:id', protect, downloadOfferLetter);
 router.get('/all', protect, adminOnly, getAllApplications);
+router.get('/export-transactions', protect, adminOnly, exportTransactionsCsv);
 
 module.exports = router;
 

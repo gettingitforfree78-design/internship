@@ -1,14 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 
-const dataDir = path.join(__dirname, '../../secured_not_to_be_pushed/test_real_data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-const jsonFilePath = path.join(dataDir, 'applicants.json');
+const getDataDir = () => {
+  const dir = path.resolve(process.cwd(), 'secured_not_to_be_pushed/test_real_data');
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  return dir;
+};
 
 exports.saveToJsonFile = (phone, data) => {
   try {
+    const dataDir = getDataDir();
+    const jsonFilePath = path.join(dataDir, 'applicants.json');
     let existingData = {};
     if (fs.existsSync(jsonFilePath)) {
       const fileContent = fs.readFileSync(jsonFilePath, 'utf8');
@@ -66,6 +70,7 @@ exports.saveToJsonFile = (phone, data) => {
 
 exports.savePaymentToCsv = (application) => {
   try {
+    const dataDir = getDataDir();
     const csvFilePath = path.join(dataDir, 'payments_verification.csv');
     const headers = ['FullName', 'Email', 'Phone', 'UPI_ID', 'Transaction_ID', 'Amount', 'Status', 'Timestamp'];
     

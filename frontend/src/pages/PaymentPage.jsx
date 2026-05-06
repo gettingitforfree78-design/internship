@@ -60,7 +60,7 @@ export default function PaymentPage() {
         upiTransactionId: upiTxnId.trim(),
         upiId: upiId.trim(),
       });
-      toast.success(data.message || 'Payment submitted for verification! ­ƒÄë');
+      toast.success(data.message || 'Payment submitted for verification! 🎉');
       navigate('/success', { state: { ...data, applicantName: state.applicantName } });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Payment submission failed');
@@ -74,7 +74,7 @@ export default function PaymentPage() {
     setLoading(true);
     try {
       const { data } = await skipPayment({ applicationId: state.applicationId });
-      toast.success(data.message || 'Payment Skipped! ­ƒÄë');
+      toast.success(data.message || 'Payment Skipped! 🎉');
       navigate('/success', { state: { ...data, applicantName: state.applicantName } });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to skip payment');
@@ -88,7 +88,7 @@ export default function PaymentPage() {
       <div style={{ width: '100%', maxWidth: '32rem' }}>
         {/* Progress */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '3.5rem', padding: '0 0.5rem', flexWrap: 'wrap' }}>
-          {['Application Form', 'Payment Ôé╣199', 'Offer Letter'].map((s, i) => (
+          {['Application Form', 'Payment ₹199', 'Offer Letter'].map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? '1 1 auto' : '0 0 auto', minWidth: 'fit-content' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{ 
@@ -100,7 +100,7 @@ export default function PaymentPage() {
                   boxShadow: i === 1 ? '0 4px 12px rgba(255,107,53,0.3)' : 'none',
                   border: (i === 1 || i === 0) ? 'none' : '1px solid rgba(255,255,255,0.1)'
                 }}>
-                  {i === 0 ? 'Ô£ô' : i + 1}
+                  {i === 0 ? '✓' : i + 1}
                 </div>
                 <span style={{ 
                   fontSize: '0.9375rem', 
@@ -144,19 +144,19 @@ export default function PaymentPage() {
             <div className="card" style={{ background: 'rgba(255,107,53,0.06)', border: '1px solid rgba(255,107,53,0.15)', padding: '2rem', marginBottom: '2rem' }}>
               <div style={{ color: '#94a3b8', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Total Amount</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
-                <span style={{ color: '#FF6B35', fontSize: '1.25rem', fontWeight: 700, marginTop: '0.25rem' }}>Ôé╣</span>
+                <span style={{ color: '#FF6B35', fontSize: '1.25rem', fontWeight: 700, marginTop: '0.25rem' }}>₹</span>
                 <span style={{ color: '#fff', fontSize: '3.5rem', fontWeight: 900, lineHeight: 1 }}>{PAYMENT_AMOUNT}</span>
               </div>
-              <div style={{ color: '#64748b', fontSize: '0.8125rem', marginTop: '0.5rem', textDecoration: 'line-through' }}>Original: Ôé╣999</div>
+              <div style={{ color: '#64748b', fontSize: '0.8125rem', marginTop: '0.5rem', textDecoration: 'line-through' }}>Original: ₹999</div>
             </div>
 
             {/* What you get */}
             <div style={{ textAlign: 'left', marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                'Ô£à Official Internship Offer Letter (PDF)',
-                'Ô£à Sent instantly to your Gmail',
-                'Ô£à Certificate upon completion',
-                `Ô£à Verified by ${COMPANY_NAME}`,
+                '✅ Official Internship Offer Letter (PDF)',
+                '✅ Sent instantly to your Gmail',
+                '✅ Certificate upon completion',
+                `✅ Verified by ${COMPANY_NAME}`,
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
                   {item}
@@ -166,7 +166,7 @@ export default function PaymentPage() {
 
             {/* Pay via UPI QR button */}
             <button onClick={handleShowQR} disabled={loading} className="btn-primary" style={{ width: '100%', fontSize: '1.0625rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <FaQrcode /> Pay Ôé╣{PAYMENT_AMOUNT} via UPI
+              <FaQrcode /> Pay ₹{PAYMENT_AMOUNT} via UPI
             </button>
 
             {/* Temporary Skip Payment Button */}
@@ -246,7 +246,7 @@ export default function PaymentPage() {
                   <FaQrcode style={{ color: '#fff', fontSize: '1.5rem' }} />
                 </div>
                 <h2 style={{ color: '#fff', fontWeight: 800, fontSize: '1.375rem', marginBottom: '0.25rem' }}>
-                  Scan & Pay Ôé╣{PAYMENT_AMOUNT}
+                  Scan & Pay ₹{PAYMENT_AMOUNT}
                 </h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
                   Scan this QR code with any UPI app
@@ -293,7 +293,7 @@ export default function PaymentPage() {
                 marginBottom: '1.5rem',
                 color: '#4ade80', fontWeight: 700, fontSize: '0.9375rem',
               }}>
-                Amount: Ôé╣{PAYMENT_AMOUNT}
+                Amount: ₹{PAYMENT_AMOUNT}
               </div>
 
               {/* Instructions */}
@@ -305,12 +305,12 @@ export default function PaymentPage() {
                 marginBottom: '1.5rem',
               }}>
                 <div style={{ color: '#cbd5e1', fontSize: '0.8125rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-                  ­ƒôï Steps:
+                  📋 Steps:
                 </div>
                 {[
                   '1. Open any UPI app (GPay, PhonePe, Paytm)',
                   '2. Scan the QR code above',
-                  `3. Verify amount is Ôé╣${PAYMENT_AMOUNT}`,
+                  `3. Verify amount is ₹${PAYMENT_AMOUNT}`,
                   '4. Complete the payment',
                   '5. Copy the UPI Transaction ID from your app',
                   '6. Paste it below and click confirm',
@@ -324,7 +324,7 @@ export default function PaymentPage() {
               {/* UPI ID Input */}
               <div style={{ marginBottom: '1rem', textAlign: 'left' }}>
                 <label style={{ color: '#cbd5e1', fontSize: '0.8125rem', fontWeight: 600, display: 'block', marginBottom: '0.5rem' }}>
-                  ­ƒæñ Your UPI ID (Optional)
+                  👤 Your UPI ID (Optional)
                 </label>
                 <input
                   type="text"
@@ -354,7 +354,7 @@ export default function PaymentPage() {
               {/* UPI Transaction ID Input */}
               <div style={{ marginBottom: '1rem', textAlign: 'left' }}>
                 <label style={{ color: '#cbd5e1', fontSize: '0.8125rem', fontWeight: 600, display: 'block', marginBottom: '0.5rem' }}>
-                  ­ƒôØ UPI Transaction ID / Reference Number
+                  📝 UPI Transaction ID / Reference Number
                 </label>
                 <input
                   type="text"
@@ -381,7 +381,7 @@ export default function PaymentPage() {
                 />
                 {txnError && (
                   <div style={{ color: '#ef4444', fontSize: '0.8125rem', marginTop: '0.375rem' }}>
-                    ÔÜá´©Å {txnError}
+                    ⚠️ {txnError}
                   </div>
                 )}
                 <div style={{ color: '#64748b', fontSize: '0.75rem', marginTop: '0.375rem' }}>
@@ -414,14 +414,14 @@ export default function PaymentPage() {
                 }}
               >
                 {confirming ? (
-                  <>ÔÅ│ Verifying Payment...</>
+                  <>⏳ Verifying Payment...</>
                 ) : (
                   <><FaCheckCircle /> I've Completed the Payment</>
                 )}
               </button>
 
               <p style={{ color: '#64748b', fontSize: '0.75rem', marginTop: '0.75rem' }}>
-                ÔÜá´©Å Only click after you've successfully paid via UPI and entered the Transaction ID
+                ⚠️ Only click after you've successfully paid via UPI and entered the Transaction ID
               </p>
             </motion.div>
           </motion.div>

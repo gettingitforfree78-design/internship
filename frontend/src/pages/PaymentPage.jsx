@@ -182,7 +182,7 @@ export default function PaymentPage() {
         </motion.div>
       </div>
 
-      {/* ÔöÇÔöÇÔöÇ UPI QR Code Modal ÔöÇÔöÇÔöÇ */}
+      {/* ─── UPI QR Code Modal ─── */}
       <AnimatePresence>
         {showQR && (
           <motion.div

@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
       console.warn('Logout API failed, continuing client logout');
     }
     localStorage.removeItem('launchpad_user');
+    localStorage.removeItem('launchpad_token');
     setUser(null);
   };
 
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       const stored = localStorage.getItem('launchpad_user');
+      const token = localStorage.getItem('launchpad_token');
 
       // 1. Check for manual reset param in URL: ?dev_reset=true
       if (window.location.search.includes('dev_reset=true')) {
@@ -38,12 +40,12 @@ export const AuthProvider = ({ children }) => {
       if (stored) {
         try {
           setUser(JSON.parse(stored));
-          // 2. Verify HttpOnly cookie with server
+          // 2. Verify HttpOnly cookie or Bearer token with server
           const res = await getProfile();
           setUser(res.data.user);
           localStorage.setItem('launchpad_user', JSON.stringify(res.data.user));
         } catch (err) {
-          console.warn('Session expired or invalid cookie. Logging out...');
+          console.warn('Session expired or invalid cookie/token. Logging out...');
           logout();
         }
       }
@@ -55,16 +57,18 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const res = await loginUser({ email, password });
-    const { user: userData } = res.data;
+    const { user: userData, token } = res.data;
     localStorage.setItem('launchpad_user', JSON.stringify(userData));
+    if (token) localStorage.setItem('launchpad_token', token);
     setUser(userData);
     return res.data;
   };
 
   const register = async (formData) => {
     const res = await registerUser(formData);
-    const { user: userData } = res.data;
+    const { user: userData, token } = res.data;
     localStorage.setItem('launchpad_user', JSON.stringify(userData));
+    if (token) localStorage.setItem('launchpad_token', token);
     setUser(userData);
     return res.data;
   };

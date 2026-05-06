@@ -9,6 +9,15 @@ const API = axios.create({
   withCredentials: true,
 });
 
+// Attach token from localStorage to headers
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem('launchpad_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => Promise.reject(error));
+
 // Handle 401 responses
 API.interceptors.response.use(
   (response) => response,

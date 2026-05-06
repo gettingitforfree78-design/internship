@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-// Live backend URL - update this if the Render service URL changes
-const BACKEND_URL = import.meta.env.DEV
-  ? 'http://localhost:5000/api'
-  : 'https://internship-6uer.onrender.com/api';
+// ⚠️ HARDCODED: Do NOT use import.meta.env.VITE_API_URL here.
+// Vercel has a stale env var that overrides it. Update this string directly.
+const BACKEND_URL = 'https://internship-6uer.onrender.com/api';
 
 const API = axios.create({
   baseURL: BACKEND_URL,

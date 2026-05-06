@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const LoginLog = require('../models/LoginLog');
 const generateToken = require('../utils/generateToken');
 
 // @desc    Register a new user
@@ -79,6 +80,20 @@ exports.login = async (req, res) => {
       sameSite: isProduction ? 'none' : 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     };
+
+    // Log the successful login event
+    try {
+      const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const userAgent = req.headers['user-agent'] || 'Unknown';
+      await LoginLog.create({
+        userId: user._id,
+        email: user.email,
+        ipAddress,
+        userAgent
+      });
+    } catch (logErr) {
+      console.error('Failed to save login log:', logErr.message);
+    }
 
     res.cookie('token', token, cookieOptions).json({
       success: true,

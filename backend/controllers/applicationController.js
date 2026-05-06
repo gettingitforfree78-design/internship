@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const Application = require('../models/Application');
 const OfferLetter = require('../models/OfferLetter');
@@ -205,7 +205,7 @@ exports.skipPayment = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Payment Skipped! Offer Letter generated. 🎉',
+      message: 'Payment Skipped! Offer Letter generated.',
       offerLetterId,
       emailSent,
       application: {

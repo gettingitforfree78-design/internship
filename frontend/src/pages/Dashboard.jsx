@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { getPaymentHistory, getMyCertificates, updateProfile, getMyApplications, getAllApplications, shareOfferLetter, exportTransactions } from '../services/api';
 import toast from 'react-hot-toast';
-import { FaUser, FaGraduationCap, FaCertificate, FaCreditCard, FaDownload, FaEdit, FaSave, FaCheck, FaSpinner, FaFileAlt, FaShare } from 'react-icons/fa';
+import { FaUser, FaGraduationCap, FaCertificate, FaCreditCard, FaDownload, FaEdit, FaSave, FaCheck, FaSpinner, FaFileAlt, FaShare, FaHourglassHalf, FaRocket } from 'react-icons/fa';
 
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 
@@ -113,7 +113,7 @@ export default function Dashboard() {
             <span className="gradient-text">
               {user?.name?.split(" ")[0]}
             </span>{" "}
-            👋
+            
           </h1>
 
           <p className="text-gray-400 mt-2 text-sm md:text-base">
@@ -157,10 +157,10 @@ export default function Dashboard() {
 
                 <span className="text-xs md:text-sm text-gray-300 bg-white/5 px-4 py-2 rounded-full">
                   {fullyPaidApplications.length > 0
-                    ? "🎉 Internship Active"
+                    ? <><FaCheckCircle style={{ color: '#4ade80', marginRight: '5px', verticalAlign: 'middle' }} /> Internship Active</>
                     : activeApplications.length > 0 
-                      ? "⏳ Verification Pending"
-                      : "🚀 In Progress"}
+                      ? <><FaHourglassHalf style={{ color: '#fbbf24', marginRight: '5px', verticalAlign: 'middle' }} /> Verification Pending</>
+                      : <><FaRocket style={{ color: '#60a5fa', marginRight: '5px', verticalAlign: 'middle' }} /> In Progress</>}
                 </span>
               </div>
 

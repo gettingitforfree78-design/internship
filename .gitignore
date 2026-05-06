@@ -33,3 +33,5 @@ data/
 
 # Secure Data Folder
 secured_not_to_be_pushed/
+
+.vercel

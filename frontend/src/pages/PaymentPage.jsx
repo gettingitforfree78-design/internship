@@ -1,10 +1,10 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { confirmUpiPayment, skipPayment } from '../services/api';
 import toast from 'react-hot-toast';
-import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheckCircle } from 'react-icons/fa';
+import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheckCircle, FaRupeeSign, FaCheck } from 'react-icons/fa';
 
 const COMPANY_NAME = 'Launchpad Intensive Pvt Ltd';
 const UPI_VPA = '9696614492@yapl';
@@ -100,7 +100,7 @@ export default function PaymentPage() {
                   boxShadow: i === 1 ? '0 4px 12px rgba(255,107,53,0.3)' : 'none',
                   border: (i === 1 || i === 0) ? 'none' : '1px solid rgba(255,255,255,0.1)'
                 }}>
-                  {i === 0 ? '✓' : i + 1}
+                  {i === 0 ? <FaCheck style={{ fontSize: '0.8rem' }} /> : i + 1}
                 </div>
                 <span style={{ 
                   fontSize: '0.9375rem', 
@@ -144,21 +144,22 @@ export default function PaymentPage() {
             <div className="card" style={{ background: 'rgba(255,107,53,0.06)', border: '1px solid rgba(255,107,53,0.15)', padding: '2rem', marginBottom: '2rem' }}>
               <div style={{ color: '#94a3b8', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Total Amount</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
-                <span style={{ color: '#FF6B35', fontSize: '1.25rem', fontWeight: 700, marginTop: '0.25rem' }}>₹</span>
+                <span style={{ color: '#FF6B35', fontSize: '1.25rem', fontWeight: 700, marginTop: '0.25rem' }}><FaRupeeSign style={{ fontSize: '1rem' }} /></span>
                 <span style={{ color: '#fff', fontSize: '3.5rem', fontWeight: 900, lineHeight: 1 }}>{PAYMENT_AMOUNT}</span>
               </div>
-              <div style={{ color: '#64748b', fontSize: '0.8125rem', marginTop: '0.5rem', textDecoration: 'line-through' }}>Original: ₹999</div>
+              <div style={{ color: '#64748b', fontSize: '0.8125rem', marginTop: '0.5rem', textDecoration: 'line-through' }}>Original: <FaRupeeSign style={{ fontSize: '0.7rem' }} />999</div>
             </div>
 
             {/* What you get */}
             <div style={{ textAlign: 'left', marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {[
-                '✅ Official Internship Offer Letter (PDF)',
-                '✅ Sent instantly to your Gmail',
-                '✅ Certificate upon completion',
-                `✅ Verified by ${COMPANY_NAME}`,
+                'Official Internship Offer Letter (PDF)',
+                'Sent instantly to your Gmail',
+                'Certificate upon completion',
+                `Verified by ${COMPANY_NAME}`,
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
+                  <FaCheckCircle style={{ color: '#4ade80', flexShrink: 0 }} />
                   {item}
                 </div>
               ))}
@@ -166,7 +167,7 @@ export default function PaymentPage() {
 
             {/* Pay via UPI QR button */}
             <button onClick={handleShowQR} disabled={loading} className="btn-primary" style={{ width: '100%', fontSize: '1.0625rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-              <FaQrcode /> Pay ₹{PAYMENT_AMOUNT} via UPI
+              <FaQrcode /> Pay <FaRupeeSign style={{ fontSize: '0.9rem' }} />{PAYMENT_AMOUNT} via UPI
             </button>
 
             {/* Temporary Skip Payment Button */}
@@ -246,7 +247,7 @@ export default function PaymentPage() {
                   <FaQrcode style={{ color: '#fff', fontSize: '1.5rem' }} />
                 </div>
                 <h2 style={{ color: '#fff', fontWeight: 800, fontSize: '1.375rem', marginBottom: '0.25rem' }}>
-                  Scan & Pay ₹{PAYMENT_AMOUNT}
+                  Scan & Pay <FaRupeeSign style={{ fontSize: '1.1rem' }} />{PAYMENT_AMOUNT}
                 </h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
                   Scan this QR code with any UPI app
@@ -293,7 +294,7 @@ export default function PaymentPage() {
                 marginBottom: '1.5rem',
                 color: '#4ade80', fontWeight: 700, fontSize: '0.9375rem',
               }}>
-                Amount: ₹{PAYMENT_AMOUNT}
+                Amount: <FaRupeeSign style={{ fontSize: '0.8rem' }} />{PAYMENT_AMOUNT}
               </div>
 
               {/* Instructions */}

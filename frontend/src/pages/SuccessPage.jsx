@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCheckCircle, FaEnvelope, FaFileAlt, FaHome, FaTachometerAlt, FaCommentAlt, FaPaperPlane, FaSpinner } from 'react-icons/fa';
+import { FaCheckCircle, FaEnvelope, FaFileAlt, FaHome, FaTachometerAlt, FaCommentAlt, FaPaperPlane, FaSpinner, FaHourglassHalf, FaClipboardList } from 'react-icons/fa';
 import { submitFeedback } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -62,7 +62,7 @@ export default function SuccessPage() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card" style={{ padding: '3rem 2.5rem' }}>
           <h1 style={{ color: '#fff', fontWeight: 900, fontSize: '2rem', marginBottom: '0.75rem', lineHeight: 1.2 }}>
-            {isPending ? <>Payment <span style={{ color: '#fbbf24' }}>Submitted!</span> ⏳</> : <>Payment <span style={{ color: '#4ade80' }}>Successful!</span> 🎉</>}
+            {isPending ? <>Payment <span style={{ color: '#fbbf24' }}>Submitted!</span> <FaHourglassHalf style={{ fontSize: '1.25rem', verticalAlign: 'middle', marginLeft: '5px' }} /></> : <>Payment <span style={{ color: '#4ade80' }}>Successful!</span> <FaCheckCircle style={{ fontSize: '1.25rem', verticalAlign: 'middle', marginLeft: '5px' }} /></>}
           </h1>
           <p style={{ color: '#94a3b8', lineHeight: 1.8, marginBottom: '2rem', fontSize: '1.0625rem' }}>
             {isPending 
@@ -95,7 +95,7 @@ export default function SuccessPage() {
 
           {/* Next steps */}
           <div style={{ background: 'rgba(255,107,53,0.06)', border: '1px solid rgba(255,107,53,0.12)', borderRadius: '0.875rem', padding: '1.25rem 1.5rem', marginBottom: '2rem', textAlign: 'left' }}>
-            <p style={{ color: '#FF8C5A', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.75rem' }}>📋 What's Next?</p>
+            <p style={{ color: '#FF8C5A', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.75rem' }}><FaClipboardList style={{ marginRight: '5px' }} /> What's Next?</p>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {(isPending ? [
                 'Admin will verify your UPI transaction ID',
@@ -199,7 +199,7 @@ export default function SuccessPage() {
                   animate={{ opacity: 1, scale: 1 }} 
                   style={{ background: 'rgba(74,222,128,0.05)', border: '1px solid rgba(74,222,128,0.1)', borderRadius: '0.75rem', padding: '1.25rem', textAlign: 'center' }}
                 >
-                  <p style={{ color: '#4ade80', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>🎉 Thank you for your valuable feedback!</p>
+                  <p style={{ color: '#4ade80', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}> Thank you for your valuable feedback!</p>
                   <p style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '0.5rem' }}>Our HR team will review it shortly.</p>
                 </motion.div>
               )}

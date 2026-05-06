@@ -10,13 +10,12 @@ https.get('https://internship-wheat-zeta.vercel.app/', (r) => {
         let d2 = '';
         r2.on('data', c => d2 += c);
         r2.on('end', () => {
-          // Check for both old and new URLs
-          const has6uer = d2.includes('internship-6uer');
-          const has1z75q = d2.includes('internship-1-z75q');
-          console.log('Has NEW URL (6uer):', has6uer);
-          console.log('Has OLD URL (1-z75q):', has1z75q);
+          console.log('Has 6uer:', d2.includes('internship-6uer'));
+          console.log('Has 1-z75q:', d2.includes('internship-1-z75q'));
         });
       });
+    } else {
+      console.log('No JS bundle found in HTML');
     }
   });
 });

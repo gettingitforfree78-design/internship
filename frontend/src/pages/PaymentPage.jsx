@@ -170,10 +170,7 @@ export default function PaymentPage() {
               <FaQrcode /> Pay <FaRupeeSign style={{ fontSize: '0.9rem' }} />{PAYMENT_AMOUNT} via UPI
             </button>
 
-            {/* Temporary Skip Payment Button */}
-            <button onClick={handleSkipPayment} disabled={loading} style={{ width: '100%', fontSize: '0.9rem', padding: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'transparent', border: '1px solid rgba(255,107,53,0.3)', color: '#FF6B35', borderRadius: '0.75rem', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,107,53,0.1)'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
-              Skip Payment (Temporary)
-            </button>
+
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginTop: '1.5rem', color: '#475569', fontSize: '0.8125rem' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}><FaShieldAlt style={{ color: '#4ade80' }} /> 100% Secure</span>

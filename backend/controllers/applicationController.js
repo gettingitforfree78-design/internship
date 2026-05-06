@@ -205,7 +205,7 @@ exports.skipPayment = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Payment Skipped! Offer Letter generated. ­ƒÄë',
+      message: 'Payment Skipped! Offer Letter generated. 🎉',
       offerLetterId,
       emailSent,
       application: {

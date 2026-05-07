@@ -69,7 +69,8 @@ export default function Login() {
           </form>
 
           {/* Dev Tools */}
-          {process.env.NODE_ENV === 'development' && (
+          {import.meta.env.DEV && (
+
             <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
               <p style={{ color: '#475569', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>🛠️ Developer Tools</p>
               <button onClick={resetSession} style={{ width: '100%', padding: '0.75rem', background: 'rgba(248,113,113,0.1)', color: '#f87171', border: '1px solid rgba(248,113,113,0.2)', borderRadius: '0.75rem', fontSize: '0.8125rem', fontWeight: 600, cursor: 'pointer' }}>

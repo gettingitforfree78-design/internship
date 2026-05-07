@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { getPaymentHistory, getMyCertificates, updateProfile, getMyApplications, getAllApplications, shareOfferLetter, exportTransactions } from '../services/api';
 import toast from 'react-hot-toast';
-import { FaUser, FaGraduationCap, FaCertificate, FaCreditCard, FaDownload, FaEdit, FaSave, FaCheck, FaSpinner, FaFileAlt, FaShare, FaHourglassHalf, FaRocket } from 'react-icons/fa';
+import { FaUser, FaGraduationCap, FaCertificate, FaCreditCard, FaDownload, FaEdit, FaSave, FaCheck, FaSpinner, FaFileAlt, FaShare, FaHourglassHalf, FaRocket, FaCheckCircle } from 'react-icons/fa';
+
 
 const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
 

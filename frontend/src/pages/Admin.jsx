@@ -43,11 +43,9 @@ export default function Admin() {
   const [form, setForm] = useState(defaultInternship);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => { loadAll(); }, []);
-
   const loadAll = async () => {
-    setLoading(true);
     try {
+
       const [statsRes, usersRes, internsRes, paymentsRes, certsRes, compsRes] = await Promise.all([
         getUserStats(), getAllUsers(), getInternships(),
         getPaymentHistory(true), getAllCertificates(), getAllCompanies()
@@ -61,6 +59,9 @@ export default function Admin() {
     } catch { toast.error('Failed to load data'); }
     setLoading(false);
   };
+
+  useEffect(() => { loadAll(); }, []);
+
 
   const handleDeleteUser = async (id) => {
     if (!confirm('Delete this user?')) return;

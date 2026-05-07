@@ -35,10 +35,14 @@ exports.submitFeedback = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
+    console.log('✅ Feedback email sent successfully to launchpad7.hr@gmail.com');
 
     res.json({ success: true, message: 'Feedback sent successfully! Thank you.' });
   } catch (err) {
-    console.error('Feedback error:', err.message);
-    res.status(500).json({ success: false, message: 'Failed to send feedback' });
+    console.error('❌ Feedback error:', err.message);
+    if (err.code === 'EAUTH') {
+      console.error('Check EMAIL_USER and EMAIL_PASS in backend.env - Authentication failed.');
+    }
+    res.status(500).json({ success: false, message: 'Failed to send feedback. Please try again later.' });
   }
 };

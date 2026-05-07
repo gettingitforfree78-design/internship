@@ -209,7 +209,7 @@ export default function SuccessPage() {
 
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} style={{ color: '#475569', fontSize: '0.8125rem', marginTop: '1.5rem' }}>
           Questions? Email us at{' '}
-          <a href="mailto:hello@launchpadintensive.com" style={{ color: '#FF8C5A', textDecoration: 'none' }}>hello@launchpadintensive.com</a>
+          <a href="mailto:launchpad7.hr@gmail.com" style={{ color: '#FF8C5A', textDecoration: 'none' }}>launchpad7.hr@gmail.com</a>
         </motion.p>
       </div>
     </div>

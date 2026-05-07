@@ -9,7 +9,7 @@ const stagger = { visible: { transition: { staggerChildren: 0.1 } } };
 
 const contactInfo = [
   { icon: FaMapMarkerAlt, title: 'Address', lines: ['123 Startup Hub, Connaught Place', 'New Delhi, India — 110001'] },
-  { icon: FaEnvelope, title: 'Email Us', lines: ['hello@launchpadintensive.com', 'support@launchpadintensive.com'] },
+  { icon: FaEnvelope, title: 'Email Us', lines: ['launchpad7.hr@gmail.com'] },
   { icon: FaPhone, title: 'Call Us', lines: ['+91 98765 43210', '+91 88889 99000'] },
   { icon: FaClock, title: 'Working Hours', lines: ['Mon–Sat: 9:00 AM – 7:00 PM', 'Sunday: Closed'] },
 ];
@@ -131,7 +131,7 @@ export default function Contact() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
                 { q: 'How long does it take to receive my offer letter?', a: 'Your offer letter is generated and emailed automatically as soon as your payment is verified — usually within 2–5 minutes.' },
-                { q: 'I didn\'t receive the offer letter email. What should I do?', a: 'Check your spam folder first. If still not found, contact us at support@launchpadintensive.com with your payment reference.' },
+                { q: 'I didn\'t receive the offer letter email. What should I do?', a: 'Check your spam folder first. If still not found, contact us at launchpad7.hr@gmail.com with your payment reference.' },
                 { q: 'Can I change my internship dates after applying?', a: 'Yes, you can request a date change by emailing us within 7 days of your application.' },
               ].map((item, i) => (
                 <motion.div key={i} variants={fadeUp} className="card" style={{ padding: '1.5rem 2rem' }}>

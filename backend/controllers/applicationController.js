@@ -282,7 +282,7 @@ exports.confirmUpiPayment = async (req, res) => {
     application.paymentMethod = 'upi_qr';
     application.upiTransactionId = upiTransactionId.trim();
     application.upiId = upiId ? upiId.trim() : '';
-    application.amount = 199; // or whatever the current amount is
+    application.amount = 149; // Updated from 199
 
     await application.save();
 
@@ -356,7 +356,7 @@ exports.exportTransactionsCsv = async (req, res) => {
         app.phone || '',
         app.upiId || '',
         app.upiTransactionId || '',
-        app.amount || 199,
+        app.amount || 149,
         app.paymentStatus || '',
         new Date(app.createdAt).toISOString()
       ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');

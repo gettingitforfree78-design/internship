@@ -66,7 +66,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <FaEnvelope className="text-accent-500 shrink-0" />
-                <span>hello@launchpadintensive.com</span>
+                <span>launchpad7.hr@gmail.com</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400">
                 <FaPhone className="text-accent-500 shrink-0" />

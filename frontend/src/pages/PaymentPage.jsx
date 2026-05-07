@@ -8,7 +8,7 @@ import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheckCircle, FaRupeeSign, FaC
 
 const COMPANY_NAME = 'Launchpad Intensive Pvt Ltd';
 const UPI_VPA = '9696614492@yapl';
-const PAYMENT_AMOUNT = 1; // TODO: change back to 199 for production
+const PAYMENT_AMOUNT = 149; // Updated from 199
 
 // Build UPI deep link for QR (kept for reference, but now using static image)
 // const UPI_DEEP_LINK = `upi://pay?pa=${UPI_VPA}&pn=${encodeURIComponent(COMPANY_NAME)}&am=${PAYMENT_AMOUNT}&cu=INR&tn=${encodeURIComponent('Internship Application Fee')}`;
@@ -88,24 +88,24 @@ export default function PaymentPage() {
       <div style={{ width: '100%', maxWidth: '32rem' }}>
         {/* Progress */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '3.5rem', padding: '0 0.5rem', flexWrap: 'wrap' }}>
-          {['Application Form', 'Payment ₹199', 'Offer Letter'].map((s, i) => (
+          {['Application Form', 'Payment ₹149', 'Offer Letter'].map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? '1 1 auto' : '0 0 auto', minWidth: 'fit-content' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ 
-                  width: '2.25rem', height: '2.25rem', borderRadius: '50%', 
-                  background: i === 0 ? '#4ade80' : i === 1 ? 'linear-gradient(135deg, #FF6B35, #FF8C5A)' : 'rgba(255,255,255,0.05)', 
-                  color: '#fff', 
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                <div style={{
+                  width: '2.25rem', height: '2.25rem', borderRadius: '50%',
+                  background: i === 0 ? '#4ade80' : i === 1 ? 'linear-gradient(135deg, #FF6B35, #FF8C5A)' : 'rgba(255,255,255,0.05)',
+                  color: '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '0.9375rem', fontWeight: 800, flexShrink: 0,
                   boxShadow: i === 1 ? '0 4px 12px rgba(255,107,53,0.3)' : 'none',
                   border: (i === 1 || i === 0) ? 'none' : '1px solid rgba(255,255,255,0.1)'
                 }}>
                   {i === 0 ? <FaCheck style={{ fontSize: '0.8rem' }} /> : i + 1}
                 </div>
-                <span style={{ 
-                  fontSize: '0.9375rem', 
-                  color: i === 1 ? '#fff' : i === 0 ? '#4ade80' : '#64748b', 
-                  fontWeight: i === 1 ? 700 : 500, 
+                <span style={{
+                  fontSize: '0.9375rem',
+                  color: i === 1 ? '#fff' : i === 0 ? '#4ade80' : '#64748b',
+                  fontWeight: i === 1 ? 700 : 500,
                   whiteSpace: 'nowrap',
                   letterSpacing: '0.01em'
                 }}>
@@ -113,10 +113,10 @@ export default function PaymentPage() {
                 </span>
               </div>
               {i < 2 && (
-                <div style={{ 
-                  flex: 1, height: '2px', 
-                  background: i === 0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255,255,255,0.05)', 
-                  margin: '0 1.25rem', minWidth: '1rem' 
+                <div style={{
+                  flex: 1, height: '2px',
+                  background: i === 0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255,255,255,0.05)',
+                  margin: '0 1.25rem', minWidth: '1rem'
                 }} />
               )}
             </div>
@@ -267,19 +267,7 @@ export default function PaymentPage() {
                 />
               </div>
 
-              {/* UPI ID display */}
-              <div style={{
-                background: 'rgba(255,107,53,0.08)',
-                border: '1px solid rgba(255,107,53,0.2)',
-                borderRadius: '0.75rem',
-                padding: '0.75rem 1rem',
-                marginBottom: '1rem',
-              }}>
-                <div style={{ color: '#94a3b8', fontSize: '0.75rem', marginBottom: '0.25rem' }}>UPI ID</div>
-                <div style={{ color: '#FF6B35', fontWeight: 700, fontSize: '1.0625rem', fontFamily: 'monospace', letterSpacing: '0.5px' }}>
-                  {UPI_VPA}
-                </div>
-              </div>
+
 
               {/* Amount badge */}
               <div style={{

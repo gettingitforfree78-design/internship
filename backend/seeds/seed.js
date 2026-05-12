@@ -37,8 +37,8 @@ const seedData = async () => {
         shortDescription: 'Learn SEO, SEM, Social Media & Content Marketing with real campaigns',
         category: 'digital-marketing',
         duration: '6 weeks',
-        price: 999,
-        originalPrice: 2499,
+        price: 149,
+        originalPrice: 499,
         icon: '📱',
         skills: ['SEO', 'Google Ads', 'Social Media', 'Content Marketing', 'Analytics', 'Email Marketing'],
         features: [
@@ -67,8 +67,8 @@ const seedData = async () => {
         shortDescription: 'Full-stack development with React, Node.js & modern web technologies',
         category: 'web-development',
         duration: '8 weeks',
-        price: 1499,
-        originalPrice: 3999,
+        price: 149,
+        originalPrice: 499,
         icon: '💻',
         skills: ['HTML/CSS', 'JavaScript', 'React.js', 'Node.js', 'MongoDB', 'Git'],
         features: [
@@ -99,8 +99,8 @@ const seedData = async () => {
         shortDescription: 'Master sales, client acquisition & strategic business growth',
         category: 'business-development',
         duration: '4 weeks',
-        price: 1299,
-        originalPrice: 2999,
+        price: 149,
+        originalPrice: 499,
         icon: '📈',
         skills: ['Sales Strategy', 'Market Analysis', 'Client Relations', 'Pitch Decks', 'CRM Tools', 'Negotiation'],
         features: [

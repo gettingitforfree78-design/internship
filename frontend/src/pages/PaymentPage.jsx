@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { confirmUpiPayment, skipPayment } from '../services/api';
 import toast from 'react-hot-toast';
-import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheckCircle, FaRupeeSign, FaCheck } from 'react-icons/fa';
+import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheck, FaRupeeSign } from 'react-icons/fa';
 
 const COMPANY_NAME = 'Launchpad Intensive Pvt Ltd';
 const UPI_VPA = '9696614492@yapl';
@@ -147,7 +147,7 @@ export default function PaymentPage() {
                 <span style={{ color: '#FF6B35', fontSize: '1.25rem', fontWeight: 700, marginTop: '0.25rem' }}><FaRupeeSign style={{ fontSize: '1rem' }} /></span>
                 <span style={{ color: '#fff', fontSize: '3.5rem', fontWeight: 900, lineHeight: 1 }}>{PAYMENT_AMOUNT}</span>
               </div>
-              <div style={{ color: '#64748b', fontSize: '0.8125rem', marginTop: '0.5rem', textDecoration: 'line-through' }}>Original: <FaRupeeSign style={{ fontSize: '0.7rem' }} />999</div>
+              <div style={{ color: '#64748b', fontSize: '0.8125rem', marginTop: '0.5rem', textDecoration: 'line-through' }}>Original: <FaRupeeSign style={{ fontSize: '0.7rem' }} />499</div>
             </div>
 
             {/* What you get */}
@@ -159,7 +159,7 @@ export default function PaymentPage() {
                 `Verified by ${COMPANY_NAME}`,
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#cbd5e1', fontSize: '0.9rem' }}>
-                  <FaCheckCircle style={{ color: '#4ade80', flexShrink: 0 }} />
+                  <FaCheck style={{ color: '#4ade80', flexShrink: 0 }} />
                   {item}
                 </div>
               ))}
@@ -402,7 +402,7 @@ export default function PaymentPage() {
                 {confirming ? (
                   <>⏳ Verifying Payment...</>
                 ) : (
-                  <><FaCheckCircle /> I've Completed the Payment</>
+                  <><FaCheck /> I've Completed the Payment</>
                 )}
               </button>
 
@@ -416,3 +416,5 @@ export default function PaymentPage() {
     </div>
   );
 }
+
+

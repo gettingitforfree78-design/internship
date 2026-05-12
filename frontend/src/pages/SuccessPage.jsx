@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaCheckCircle, FaEnvelope, FaFileAlt, FaHome, FaTachometerAlt, FaCommentAlt, FaPaperPlane, FaSpinner, FaHourglassHalf, FaClipboardList } from 'react-icons/fa';
+import { FaCheck, FaEnvelope, FaFileAlt, FaHome, FaTachometerAlt, FaCommentAlt, FaPaperPlane, FaSpinner, FaHourglassHalf, FaClipboardList } from 'react-icons/fa';
 import { submitFeedback } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -50,7 +50,7 @@ export default function SuccessPage() {
           {/* Success Icon */}
           <div style={{ position: 'relative', display: 'inline-block', marginBottom: '2rem' }}>
             <div style={{ width: '7rem', height: '7rem', borderRadius: '50%', background: isPending ? 'rgba(255,215,0,0.1)' : 'rgba(74,222,128,0.1)', border: `3px solid ${isPending ? 'rgba(255,215,0,0.3)' : 'rgba(74,222,128,0.3)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>
-              <FaCheckCircle style={{ color: isPending ? '#fbbf24' : '#4ade80', fontSize: '3rem' }} />
+              <FaCheck style={{ color: isPending ? '#fbbf24' : '#4ade80', fontSize: '3rem' }} />
             </div>
             {/* Rings */}
             {[1, 2].map(r => (
@@ -62,7 +62,7 @@ export default function SuccessPage() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card" style={{ padding: '3rem 2.5rem' }}>
           <h1 style={{ color: '#fff', fontWeight: 900, fontSize: '2rem', marginBottom: '0.75rem', lineHeight: 1.2 }}>
-            {isPending ? <>Payment <span style={{ color: '#fbbf24' }}>Submitted!</span> <FaHourglassHalf style={{ fontSize: '1.25rem', verticalAlign: 'middle', marginLeft: '5px' }} /></> : <>Payment <span style={{ color: '#4ade80' }}>Successful!</span> <FaCheckCircle style={{ fontSize: '1.25rem', verticalAlign: 'middle', marginLeft: '5px' }} /></>}
+            {isPending ? <>Payment <span style={{ color: '#fbbf24' }}>Submitted!</span> <FaHourglassHalf style={{ fontSize: '1.25rem', verticalAlign: 'middle', marginLeft: '5px' }} /></> : <>Payment <span style={{ color: '#4ade80' }}>Successful!</span> <FaCheck style={{ fontSize: '1.25rem', verticalAlign: 'middle', marginLeft: '5px' }} /></>}
           </h1>
           <p style={{ color: '#94a3b8', lineHeight: 1.8, marginBottom: '2rem', fontSize: '1.0625rem' }}>
             {isPending 
@@ -215,3 +215,5 @@ export default function SuccessPage() {
     </div>
   );
 }
+
+

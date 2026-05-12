@@ -77,7 +77,7 @@ RAZORPAY_KEY_ID=rzp_test_xxxx
 RAZORPAY_KEY_SECRET=your_secret
 
 # Gmail (for certificate emails)
-EMAIL_USER=youremail@gmail.com
+EMAIL_USER=launchpad7.hr@gmail.com
 EMAIL_PASS=your_app_password
 ```
 

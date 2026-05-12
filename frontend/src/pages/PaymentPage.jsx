@@ -7,8 +7,7 @@ import toast from 'react-hot-toast';
 import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheck, FaRupeeSign } from 'react-icons/fa';
 
 const COMPANY_NAME = 'Launchpad Intensive Pvt Ltd';
-const UPI_VPA = '9696614492@yapl';
-const PAYMENT_AMOUNT = 149; // Updated from 199
+const PAYMENT_AMOUNT = 149;
 
 // Build UPI deep link for QR (kept for reference, but now using static image)
 // const UPI_DEEP_LINK = `upi://pay?pa=${UPI_VPA}&pn=${encodeURIComponent(COMPANY_NAME)}&am=${PAYMENT_AMOUNT}&cu=INR&tn=${encodeURIComponent('Internship Application Fee')}`;
@@ -24,7 +23,6 @@ export default function PaymentPage() {
   const [showQR, setShowQR] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [upiTxnId, setUpiTxnId] = useState('');
-  const [upiId, setUpiId] = useState('');
   const [txnError, setTxnError] = useState('');
 
   useEffect(() => {
@@ -35,7 +33,6 @@ export default function PaymentPage() {
   const handleShowQR = () => {
     setShowQR(true);
     setUpiTxnId('');
-    setUpiId('');
     setTxnError('');
   };
 
@@ -58,7 +55,6 @@ export default function PaymentPage() {
       const { data } = await confirmUpiPayment({
         applicationId: state.applicationId,
         upiTransactionId: upiTxnId.trim(),
-        upiId: upiId.trim(),
       });
       toast.success(data.message || 'Payment submitted for verification! 🎉');
       navigate('/success', { state: { ...data, applicantName: state.applicantName } });
@@ -307,35 +303,6 @@ export default function PaymentPage() {
                 ))}
               </div>
 
-              {/* UPI ID Input */}
-              <div style={{ marginBottom: '1rem', textAlign: 'left' }}>
-                <label style={{ color: '#cbd5e1', fontSize: '0.8125rem', fontWeight: 600, display: 'block', marginBottom: '0.5rem' }}>
-                  👤 Your UPI ID (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={upiId}
-                  onChange={(e) => { setUpiId(e.target.value); setTxnError(''); }}
-                  placeholder="e.g. username@oksbi"
-                  disabled={confirming}
-                  style={{
-                    width: '100%',
-                    padding: '0.875rem 1rem',
-                    fontSize: '1rem',
-                    fontFamily: 'monospace',
-                    letterSpacing: '0.5px',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '2px solid rgba(255,255,255,0.1)',
-                    borderRadius: '0.75rem',
-                    color: '#fff',
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={(e) => { e.target.style.borderColor = '#FF6B35'; }}
-                  onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-                />
-              </div>
 
               {/* UPI Transaction ID Input */}
               <div style={{ marginBottom: '1rem', textAlign: 'left' }}>

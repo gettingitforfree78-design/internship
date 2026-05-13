@@ -94,7 +94,7 @@ export default function Internships() {
                 {/* RIGHT: Pricing */}
                 <div style={{ padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,107,53,0.03)', textAlign: 'center' }}>
                   <div style={{ marginBottom: '2rem' }}>
-                    <div style={{ color: '#64748b', fontSize: '0.875rem', textDecoration: 'line-through', marginBottom: '0.25rem' }}>₹999</div>
+                    <div style={{ color: '#64748b', fontSize: '0.875rem', textDecoration: 'line-through', marginBottom: '0.25rem' }}>₹499</div>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '0.25rem' }}>
                       <span style={{ color: '#FF6B35', fontSize: '1.5rem', fontWeight: 700, marginTop: '0.5rem' }}>₹</span>
                       <span style={{ color: '#fff', fontSize: '5rem', fontWeight: 900, lineHeight: 1 }}>149</span>
@@ -200,3 +200,5 @@ export default function Internships() {
     </div>
   );
 }
+
+

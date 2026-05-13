@@ -7,11 +7,7 @@ import {
   getAllCompanies
 } from '../services/api';
 import toast from 'react-hot-toast';
-import {
-  FaUsers, FaGraduationCap, FaCreditCard, FaCertificate,
-  FaBuilding, FaTrash, FaPlus, FaEdit, FaPaperPlane,
-  FaChartBar, FaSpinner, FaTimes, FaCheck
-} from 'react-icons/fa';
+import { FaUsers, FaGraduationCap, FaCreditCard, FaCertificate, FaBuilding, FaTrash, FaPlus, FaEdit, FaPaperPlane, FaChartBar, FaSpinner, FaTimes, FaCheck } from 'react-icons/fa';
 
 const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
 
@@ -413,3 +409,5 @@ export default function Admin() {
     </div>
   );
 }
+
+

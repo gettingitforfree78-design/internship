@@ -45,6 +45,7 @@ app.use(cors({
     'http://localhost:5174',
     'http://localhost:3000',
     'https://internship-wheat-zeta.vercel.app',
+    'https://frontend-beige-tau-88.vercel.app',
   ],
   credentials: true,
 }));

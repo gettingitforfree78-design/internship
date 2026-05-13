@@ -25,19 +25,29 @@ export default function SuccessPage() {
     if (!feedback.trim()) return;
 
     setIsSubmitting(true);
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 10000)
+    );
     try {
-      await submitFeedback({
-        feedback,
-        name: user?.name,
-        email: user?.email,
-        phone: user?.phone,
-        type: isPending ? 'Post-Payment-Pending' : 'Success-Feedback'
-      });
+      await Promise.race([
+        submitFeedback({
+          feedback,
+          name: user?.name,
+          email: user?.email,
+          phone: user?.phone,
+          type: isPending ? 'Post-Payment-Pending' : 'Success-Feedback'
+        }),
+        timeout
+      ]);
       toast.success('Feedback sent! Thank you.');
       setSubmitted(true);
       setFeedback('');
     } catch (err) {
-      toast.error('Failed to send feedback');
+      if (err.message === 'timeout') {
+        toast.error('Request timed out. Please try again later.');
+      } else {
+        toast.error('Failed to send feedback');
+      }
     } finally {
       setIsSubmitting(false);
     }

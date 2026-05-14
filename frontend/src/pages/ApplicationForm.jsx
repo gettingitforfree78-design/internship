@@ -42,6 +42,9 @@ export default function ApplicationForm() {
   });
   const [errors, setErrors] = useState({});
 
+  const [customRole, setCustomRole] = useState('');
+  const [customStipend, setCustomStipend] = useState('');
+
   const set = useCallback((k, v) => { 
     setForm(f => ({ ...f, [k]: v })); 
     setErrors(e => ({ ...e, [k]: '' })); 
@@ -164,7 +167,7 @@ export default function ApplicationForm() {
                 <Field label="Internship Designation" name="internshipRole" icon={FaFileAlt} form={form} set={set} errors={errors}>
                   <div className="input-wrapper">
                     <FaFileAlt className="input-icon" />
-                    <select value={form.internshipRole} onChange={e => set('internshipRole', e.target.value)} className="form-input" style={errors.internshipRole ? { borderColor: '#f87171' } : {}}>
+                    <select value={form.internshipRole === customRole && customRole ? 'Other' : form.internshipRole} onChange={e => { if (e.target.value !== 'Other') { setCustomRole(''); set('internshipRole', e.target.value); } else { set('internshipRole', 'Other'); } }} className="form-input" style={errors.internshipRole ? { borderColor: '#f87171' } : {}}>
                       <option value="">Select Category</option>
                       <option value="Web Development">Web Development</option>
                       <option value="Digital Marketing">Digital Marketing</option>
@@ -176,9 +179,22 @@ export default function ApplicationForm() {
                       <option value="App Development">App Development</option>
                       <option value="Machine Learning">Machine Learning</option>
                       <option value="Cyber Security">Cyber Security</option>
-                      <option value="Other">Other</option>
+                      <option value="Other">✏️ Other (type below)</option>
                     </select>
                   </div>
+                  {(form.internshipRole === 'Other' || customRole) && (
+                    <div className="input-wrapper" style={{ marginTop: '0.5rem' }}>
+                      <FaFileAlt className="input-icon" />
+                      <input
+                        type="text"
+                        value={customRole}
+                        onChange={e => { setCustomRole(e.target.value); set('internshipRole', e.target.value || 'Other'); }}
+                        placeholder="e.g. HR Management, Finance, Legal..."
+                        className="form-input"
+                        style={errors.internshipRole ? { borderColor: '#f87171' } : {}}
+                      />
+                    </div>
+                  )}
                 </Field>
               </div>
             </div>
@@ -230,7 +246,18 @@ export default function ApplicationForm() {
                     <option value="₹5,000 – ₹10,000/month">₹5,000 – ₹10,000/month</option>
                     <option value="₹10,000+/month">₹10,000+/month</option>
                     <option value="Performance Based">Performance Based</option>
+                    <option value="Other">Other (specify below)</option>
                   </select>
+                  {form.stipend === 'Other' && (
+                    <input
+                      type="text"
+                      value={customStipend}
+                      onChange={e => { setCustomStipend(e.target.value); set('stipend', e.target.value || 'Other'); }}
+                      placeholder="e.g. ₹3,500/month, Equity based..."
+                      className="form-input-plain"
+                      style={{ marginTop: '0.5rem', ...(errors.stipend ? { borderColor: '#f87171' } : {}) }}
+                    />
+                  )}
                   {errors.stipend && <span style={{ color: '#f87171', fontSize: '0.8125rem' }}>{errors.stipend}</span>}
                 </div>
               </div>

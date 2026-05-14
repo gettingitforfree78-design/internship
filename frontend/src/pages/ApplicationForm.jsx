@@ -57,11 +57,13 @@ export default function ApplicationForm() {
     if (!form.phone.trim() || !/^\d{10}$/.test(form.phone)) errs.phone = '10-digit phone number required';
     if (!form.college.trim()) errs.college = 'College name is required';
     if (!form.course.trim()) errs.course = 'Course / degree is required';
-    if (!form.internshipRole.trim()) errs.internshipRole = 'Internship role is required';
+    if (form.internshipRole === 'Other' && !customRole.trim()) errs.internshipRole = 'Please specify your domain';
+    else if (!form.internshipRole.trim()) errs.internshipRole = 'Internship role is required';
     if (!form.startDate) errs.startDate = 'Start date is required';
     if (!form.endDate) errs.endDate = 'End date is required';
     if (form.startDate && form.endDate && new Date(form.endDate) <= new Date(form.startDate)) errs.endDate = 'End date must be after start date';
-    if (!form.stipend.trim()) errs.stipend = 'Stipend preference is required';
+    if (form.stipend === 'Other' && !customStipend.trim()) errs.stipend = 'Please specify your stipend preference';
+    else if (!form.stipend.trim()) errs.stipend = 'Stipend preference is required';
     return errs;
   };
 
@@ -71,7 +73,13 @@ export default function ApplicationForm() {
     if (Object.keys(errs).length > 0) { setErrors(errs); toast.error('Please fix the errors below'); return; }
     setLoading(true);
     try {
-      const res = await submitApplication(form);
+      // Resolve 'Other' values before submitting
+      const submittedForm = {
+        ...form,
+        internshipRole: form.internshipRole === 'Other' ? customRole.trim() : form.internshipRole,
+        stipend: form.stipend === 'Other' ? customStipend.trim() : form.stipend,
+      };
+      const res = await submitApplication(submittedForm);
       toast.success('Application submitted! Proceeding to payment...');
       navigate('/payment', { state: { applicationId: res.data.application._id, applicantName: form.fullName } });
     } catch (err) {
@@ -252,10 +260,11 @@ export default function ApplicationForm() {
                     <input
                       type="text"
                       value={customStipend}
-                      onChange={e => { setCustomStipend(e.target.value); set('stipend', e.target.value || 'Other'); }}
+                      onChange={e => setCustomStipend(e.target.value)}
                       placeholder="e.g. ₹3,500/month, Equity based..."
                       className="form-input-plain"
                       style={{ marginTop: '0.5rem', ...(errors.stipend ? { borderColor: '#f87171' } : {}) }}
+                      autoFocus
                     />
                   )}
                   {errors.stipend && <span style={{ color: '#f87171', fontSize: '0.8125rem' }}>{errors.stipend}</span>}

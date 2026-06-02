@@ -182,7 +182,7 @@ export default function Admin() {
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                  {['Name', 'Email', 'College', 'Role', 'Joined', 'Actions'].map(h => (
+                  {['Name', 'Email', 'College', 'Role', 'Transaction ID', 'Joined', 'Actions'].map(h => (
                     <th key={h} className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">{h}</th>
                   ))}
                   </tr>
@@ -194,6 +194,7 @@ export default function Admin() {
                       <td className="px-6 py-5 text-gray-300 text-sm">{u.email}</td>
                       <td className="px-6 py-5 text-gray-400 text-sm">{u.college || '—'}</td>
                       <td className="px-6 py-5"><span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${u.role === 'admin' ? 'bg-accent-500/20 text-accent-400' : 'bg-white/5 text-gray-400'}`}>{u.role.toUpperCase()}</span></td>
+                      <td className="px-6 py-5 text-gray-400 text-xs font-mono">{payments.find(p => p.userId?._id === u._id)?.razorpayPaymentId || '—'}</td>
                       <td className="px-6 py-5 text-gray-400 text-sm">{new Date(u.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                       <td className="px-6 py-5">
                         {u.role !== 'admin' && (
@@ -297,7 +298,7 @@ export default function Admin() {
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
-                  {['Student', 'Internship', 'Amount', 'Order ID', 'Status', 'Date'].map(h => (
+                  {['Student', 'Internship', 'Amount', 'Order ID', 'Transaction ID', 'Status', 'Date'].map(h => (
                     <th key={h} className="text-left px-6 py-4 text-xs tracking-wider text-gray-400 font-bold uppercase">{h}</th>
                   ))}
                   </tr>
@@ -309,6 +310,7 @@ export default function Admin() {
                       <td className="px-6 py-5 text-gray-300 text-sm">{p.internshipId?.title || '—'}</td>
                       <td className="px-6 py-5 text-white text-sm font-medium">₹{p.amount}</td>
                       <td className="px-6 py-5 text-gray-400 text-xs font-mono">{p.razorpayOrderId?.slice(-12) || '—'}</td>
+                      <td className="px-6 py-5 text-gray-400 text-xs font-mono">{p.razorpayPaymentId || '—'}</td>
                       <td className="px-6 py-5"><span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${p.status === 'paid' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}`}>{p.status.toUpperCase()}</span></td>
                       <td className="px-6 py-5 text-gray-400 text-sm">{new Date(p.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     </tr>

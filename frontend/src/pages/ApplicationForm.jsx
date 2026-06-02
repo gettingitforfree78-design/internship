@@ -99,12 +99,12 @@ export default function ApplicationForm() {
           <h1 style={{ color: '#fff', fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: 800, marginBottom: '0.5rem' }}>
             Internship <span className="gradient-text">Application</span>
           </h1>
-          <p style={{ color: '#94a3b8', lineHeight: 1.7 }}>Fill in your details. After submission, you'll be redirected to pay ₹149.</p>
+          <p style={{ color: '#94a3b8', lineHeight: 1.7 }}>Fill in your details. After submission, you'll be redirected to pay ₹99.</p>
         </motion.div>
 
         {/* Progress */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '3.5rem', padding: '0 0.5rem', flexWrap: 'wrap' }}>
-          {['Application Form', 'Payment ₹149', 'Offer Letter'].map((s, i) => (
+          {['Application Form', 'Payment ₹99', 'Offer Letter'].map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? '1 1 auto' : '0 0 auto', minWidth: 'fit-content' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{ 

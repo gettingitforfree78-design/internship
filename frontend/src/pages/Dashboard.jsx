@@ -178,7 +178,7 @@ export default function Dashboard() {
                   },
                   {
                     label: "Payment",
-                    sub: "₹149 fee submitted",
+                    sub: "₹99 fee submitted",
                     done: activeApplications.length > 0,
                     icon:
                       activeApplications.length > 0
@@ -234,7 +234,7 @@ export default function Dashboard() {
               <div className="glass rounded-2xl p-6 text-center">
                 <FaCreditCard className="text-green-400 text-3xl mx-auto mb-3" />
                 <p className="text-3xl font-bold text-white">
-                  ₹{activeApplications.reduce((acc, a) => acc + (a.amount || 149), 0)}
+                  ₹{activeApplications.reduce((acc, a) => acc + (a.amount || 99), 0)}
                 </p>
                 <p className="text-gray-400 text-sm">
                   Total Invested
@@ -445,7 +445,7 @@ export default function Dashboard() {
                     <tr key={`app-${i}`} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-5 text-white text-sm font-medium">{a.internshipRole}</td>
                       <td className="px-6 py-5 text-gray-400 text-sm">UPI (Manual)</td>
-                      <td className="px-6 py-5 text-white text-sm">₹{a.amount || 149}</td>
+                      <td className="px-6 py-5 text-white text-sm">₹{a.amount || 99}</td>
                       <td className="px-6 py-5">
                         <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
                           a.paymentStatus === 'paid' ? 'bg-green-500/10 text-green-400' :

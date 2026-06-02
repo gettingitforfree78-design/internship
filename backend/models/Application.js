@@ -19,7 +19,7 @@ const applicationSchema = new mongoose.Schema({
   razorpayPaymentId: { type: String },
   upiTransactionId: { type: String },
   upiId: { type: String },
-  amount: { type: Number, default: 149 },
+  amount: { type: Number, default: 99 },
   offerLetterSent: { type: Boolean, default: false },
   offerLetterId: { type: String },
 }, { timestamps: true });

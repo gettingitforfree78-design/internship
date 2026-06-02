@@ -146,8 +146,8 @@ exports.skipPayment = async (req, res) => {
     // Mark as paid with mock details
     application.paymentStatus = 'paid';
     application.paymentMethod = 'upi_qr';
-    application.upiTransactionId = `SKIPPED_${Date.now()}`;
-    application.amount = 0;
+    application.upiTransactionId = `INSTANT_99_${Date.now()}`;
+    application.amount = 99;
 
     // Generate unique offer letter ID
     const offerLetterId = `LP-OL-${Date.now()}-${uuidv4().slice(0, 6).toUpperCase()}`;
@@ -254,7 +254,7 @@ exports.shareOfferLetter = async (req, res) => {
 // @access Private
 exports.confirmUpiPayment = async (req, res) => {
   try {
-    const { applicationId, upiTransactionId, upiId } = req.body;
+    const { applicationId, upiTransactionId, upiId, amount } = req.body;
 
     const utrRegex = /^\d{12}$/;
     if (!upiTransactionId || !utrRegex.test(upiTransactionId.trim())) {
@@ -282,7 +282,7 @@ exports.confirmUpiPayment = async (req, res) => {
     application.paymentMethod = 'upi_qr';
     application.upiTransactionId = upiTransactionId.trim();
     application.upiId = upiId ? upiId.trim() : '';
-    application.amount = 149; // Updated from 199
+    application.amount = amount ? Number(amount) : 149;
 
     await application.save();
 
@@ -356,7 +356,7 @@ exports.exportTransactionsCsv = async (req, res) => {
         app.phone || '',
         app.upiId || '',
         app.upiTransactionId || '',
-        app.amount || 149,
+        app.amount || 99,
         app.paymentStatus || '',
         new Date(app.createdAt).toISOString()
       ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');

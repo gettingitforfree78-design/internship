@@ -97,7 +97,7 @@ export default function Internships() {
                     <div style={{ color: '#64748b', fontSize: '0.875rem', textDecoration: 'line-through', marginBottom: '0.25rem' }}>₹499</div>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '0.25rem' }}>
                       <span style={{ color: '#FF6B35', fontSize: '1.5rem', fontWeight: 700, marginTop: '0.5rem' }}>₹</span>
-                      <span style={{ color: '#fff', fontSize: '5rem', fontWeight: 900, lineHeight: 1 }}>149</span>
+                      <span style={{ color: '#fff', fontSize: '5rem', fontWeight: 900, lineHeight: 1 }}>99</span>
                     </div>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.35rem 1rem', background: 'rgba(74,222,128,0.1)', borderRadius: '9999px', color: '#4ade80', fontSize: '0.8125rem', fontWeight: 600, marginTop: '0.5rem' }}>
                       🎉 80% OFF — Limited Time
@@ -140,7 +140,7 @@ export default function Internships() {
               {[
                 { step: '01', title: 'Sign Up', desc: 'Create your free account in 30 seconds' },
                 { step: '02', title: 'Fill Application', desc: 'Complete your internship application form' },
-                { step: '03', title: 'Pay ₹149', desc: 'Secure payment via QR Code — Fast & Reliable' },
+                { step: '03', title: 'Pay ₹99', desc: 'Secure payment via QR Code — Fast & Reliable' },
                 { step: '04', title: 'Get Offer Letter', desc: 'PDF sent instantly to your Gmail inbox' },
               ].map((s, i) => (
                 <motion.div key={i} variants={fadeUp} className="card" style={{ padding: '2rem', textAlign: 'center' }}>
@@ -185,7 +185,7 @@ export default function Internships() {
               Join 500+ students who have already kickstarted their careers with Launchpad Intensive.
             </p>
             <button onClick={handleApply} className="btn-primary" style={{ fontSize: '1.0625rem', padding: '0.9375rem 2.5rem' }}>
-              Apply Now — ₹149 Only <FaArrowRight />
+              Apply Now — ₹99 Only <FaArrowRight />
             </button>
           </motion.div>
         </div>

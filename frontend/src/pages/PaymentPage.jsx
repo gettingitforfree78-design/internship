@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { confirmUpiPayment, skipPayment } from '../services/api';
 import toast from 'react-hot-toast';
-import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheck, FaRupeeSign } from 'react-icons/fa';
+import { FaShieldAlt, FaLock, FaQrcode, FaTimes, FaCheck, FaRupeeSign, FaBolt, FaReceipt } from 'react-icons/fa';
 
 const COMPANY_NAME = 'Launchpad Intensive Pvt Ltd';
-const PAYMENT_AMOUNT = 149;
+const PAYMENT_AMOUNT = 99;
 
 // Build UPI deep link for QR (kept for reference, but now using static image)
 // const UPI_DEEP_LINK = `upi://pay?pa=${UPI_VPA}&pn=${encodeURIComponent(COMPANY_NAME)}&am=${PAYMENT_AMOUNT}&cu=INR&tn=${encodeURIComponent('Internship Application Fee')}`;
@@ -21,6 +21,8 @@ export default function PaymentPage() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showQR, setShowQR] = useState(false);
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [selectedAmount, setSelectedAmount] = useState(99);
   const [confirming, setConfirming] = useState(false);
   const [upiTxnId, setUpiTxnId] = useState('');
   const [txnError, setTxnError] = useState('');
@@ -55,6 +57,7 @@ export default function PaymentPage() {
       const { data } = await confirmUpiPayment({
         applicationId: state.applicationId,
         upiTransactionId: upiTxnId.trim(),
+        amount: selectedAmount,
       });
       toast.success(data.message || 'Payment submitted for verification! 🎉');
       navigate('/success', { state: { ...data, applicantName: state.applicantName } });
@@ -84,7 +87,7 @@ export default function PaymentPage() {
       <div style={{ width: '100%', maxWidth: '32rem' }}>
         {/* Progress */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '3.5rem', padding: '0 0.5rem', flexWrap: 'wrap' }}>
-          {['Application Form', 'Payment ₹149', 'Offer Letter'].map((s, i) => (
+          {['Application Form', 'Payment ₹99', 'Offer Letter'].map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < 2 ? '1 1 auto' : '0 0 auto', minWidth: 'fit-content' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{
@@ -162,7 +165,7 @@ export default function PaymentPage() {
             </div>
 
             {/* Pay via UPI QR button */}
-            <button onClick={handleShowQR} disabled={loading} className="btn-primary" style={{ width: '100%', fontSize: '1.0625rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <button onClick={() => setShowOptionsModal(true)} disabled={loading} className="btn-primary" style={{ width: '100%', fontSize: '1.0625rem', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <FaQrcode /> Pay <FaRupeeSign style={{ fontSize: '0.9rem' }} />{PAYMENT_AMOUNT} via UPI
             </button>
 
@@ -175,6 +178,163 @@ export default function PaymentPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* ─── Plan Selection Modal ─── */}
+      <AnimatePresence>
+        {showOptionsModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 9999,
+              background: 'rgba(0,0,0,0.85)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: '1rem',
+              overflowY: 'auto',
+            }}
+            onClick={() => setShowOptionsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              transition={{ type: 'spring', duration: 0.4 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: 'linear-gradient(145deg, #1e293b, #0f172a)',
+                borderRadius: '1.5rem',
+                padding: '2.5rem 2rem',
+                width: '100%',
+                maxWidth: '28rem',
+                textAlign: 'center',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+                position: 'relative',
+                maxHeight: '95vh',
+                overflowY: 'auto',
+              }}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setShowOptionsModal(false)}
+                style={{
+                  position: 'absolute', top: '1rem', right: '1rem',
+                  background: 'rgba(255,255,255,0.06)', border: 'none',
+                  borderRadius: '50%', width: '2.25rem', height: '2.25rem',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#94a3b8', cursor: 'pointer', fontSize: '1rem',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#94a3b8'; }}
+              >
+                <FaTimes />
+              </button>
+
+              {/* Header */}
+              <div style={{ marginBottom: '2rem' }}>
+                <h2 style={{ color: '#fff', fontWeight: 800, fontSize: '1.5rem', marginBottom: '0.5rem' }}>
+                  Select Offer Letter Option
+                </h2>
+                <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
+                  Choose how you would like to receive your internship offer letter
+                </p>
+              </div>
+
+              {/* Options */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
+                
+                {/* Option 1: 149 */}
+                <div 
+                  onClick={() => {
+                    setShowOptionsModal(false);
+                    setSelectedAmount(149);
+                    setShowQR(true);
+                  }}
+                  style={{
+                    background: 'rgba(255,107,53,0.04)',
+                    border: '2px solid rgba(255,107,53,0.3)',
+                    borderRadius: '1rem',
+                    padding: '1.5rem',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.2s',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,107,53,0.08)'; e.currentTarget.style.borderColor = '#FF6B35'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,107,53,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,107,53,0.3)'; }}
+                >
+                  <div style={{
+                    position: 'absolute', top: '1rem', right: '1rem',
+                    background: '#FF6B35', color: '#fff',
+                    fontSize: '0.7rem', fontWeight: 700,
+                    padding: '0.25rem 0.6rem', borderRadius: '0.5rem',
+                    textTransform: 'uppercase', letterSpacing: '0.05em'
+                  }}>
+                    Recommended
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                    <div style={{ width: '2.25rem', height: '2.25rem', borderRadius: '50%', background: 'rgba(255,107,53,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FaReceipt style={{ color: '#FF8C5A', fontSize: '1rem' }} />
+                    </div>
+                    <div>
+                      <h3 style={{ color: '#fff', fontWeight: 700, fontSize: '1.0625rem', margin: 0 }}>Reference Verification</h3>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.125rem' }}>
+                        <span style={{ color: '#94a3b8', textDecoration: 'line-through', fontSize: '0.8rem' }}>₹499</span>
+                        <span style={{ color: '#FF8C5A', fontWeight: 800, fontSize: '1.125rem' }}>₹149</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p style={{ color: '#94a3b8', fontSize: '0.8125rem', margin: 0, lineHeight: 1.5 }}>
+                    Pay ₹149 and submit your 12-digit UPI reference number. Verified by HR within 12-24 hours. Includes official registration.
+                  </p>
+                </div>
+
+                {/* Option 2: 99 */}
+                <div 
+                  onClick={() => {
+                    setShowOptionsModal(false);
+                    handleSkipPayment(); // Instant delivery
+                  }}
+                  style={{
+                    background: 'rgba(255,255,255,0.02)',
+                    border: '2px solid rgba(255,255,255,0.06)',
+                    borderRadius: '1rem',
+                    padding: '1.5rem',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                    <div style={{ width: '2.25rem', height: '2.25rem', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <FaBolt style={{ color: '#e2e8f0', fontSize: '1rem' }} />
+                    </div>
+                    <div>
+                      <h3 style={{ color: '#fff', fontWeight: 700, fontSize: '1.0625rem', margin: 0 }}>Just Offer Letter</h3>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginTop: '0.125rem' }}>
+                        <span style={{ color: '#64748b', textDecoration: 'line-through', fontSize: '0.8rem' }}>₹499</span>
+                        <span style={{ color: '#fff', fontWeight: 800, fontSize: '1.125rem' }}>₹99</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p style={{ color: '#94a3b8', fontSize: '0.8125rem', margin: 0, lineHeight: 1.5 }}>
+                    Pay ₹99 and get your Offer Letter generated and sent to your Gmail instantly. No reference number verification required.
+                  </p>
+                </div>
+
+              </div>
+
+              <div style={{ color: '#475569', fontSize: '0.75rem' }}>
+                🔒 Secure and encrypted payments.
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ─── UPI QR Code Modal ─── */}
       <AnimatePresence>
@@ -240,7 +400,7 @@ export default function PaymentPage() {
                   <FaQrcode style={{ color: '#fff', fontSize: '1.5rem' }} />
                 </div>
                 <h2 style={{ color: '#fff', fontWeight: 800, fontSize: '1.375rem', marginBottom: '0.25rem' }}>
-                  Scan & Pay <FaRupeeSign style={{ fontSize: '1.1rem' }} />{PAYMENT_AMOUNT}
+                  Scan & Pay <FaRupeeSign style={{ fontSize: '1.1rem' }} />{selectedAmount}
                 </h2>
                 <p style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
                   Scan this QR code with any UPI app
@@ -275,7 +435,7 @@ export default function PaymentPage() {
                 marginBottom: '1.5rem',
                 color: '#4ade80', fontWeight: 700, fontSize: '0.9375rem',
               }}>
-                Amount: <FaRupeeSign style={{ fontSize: '0.8rem' }} />{PAYMENT_AMOUNT}
+                Amount: <FaRupeeSign style={{ fontSize: '0.8rem' }} />{selectedAmount}
               </div>
 
               {/* Instructions */}
@@ -292,7 +452,7 @@ export default function PaymentPage() {
                 {[
                   '1. Open any UPI app (GPay, PhonePe, Paytm)',
                   '2. Scan the QR code above',
-                  `3. Verify amount is ₹${PAYMENT_AMOUNT}`,
+                  `3. Verify amount is ₹${selectedAmount}`,
                   '4. Complete the payment',
                   '5. Copy the UPI Transaction ID from your app',
                   '6. Paste it below and click confirm',
